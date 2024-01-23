@@ -1,11 +1,6 @@
 ﻿using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sample_api_mongodb.Core.Services
 {
@@ -18,10 +13,28 @@ namespace sample_api_mongodb.Core.Services
             _repository = repository;
         }
 
+        public async Task<Products> Get(int id)
+        {
+            try
+            {
+                return await _repository.FindOneAsync(x => x.ProductId == id);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public async Task<List<Products>> GetAll()
         {
-            var list = await _repository.GetAll();
-            return list;
+            try
+            {
+                return await _repository.GetAll(); 
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

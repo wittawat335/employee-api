@@ -10,5 +10,6 @@ namespace sample_api_mongodb.Core.Interfaces.Services
     public interface IProductService
     {
         public Task<List<Products>> GetAll();
+        public Task<Products> Get(int id);
     }
 }

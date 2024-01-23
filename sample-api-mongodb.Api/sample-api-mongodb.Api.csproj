@@ -14,10 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Responses\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\sample-api-mongodb.Core\sample-api-mongodb.Core.csproj" />
     <ProjectReference Include="..\sample-api-mongodb.Infrastructure\sample-api-mongodb.Infrastructure.csproj" />
   </ItemGroup>
