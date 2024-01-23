@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using sample_api_mongodb.Api.Responses;
 using sample_api_mongodb.Core.Commons;
 using sample_api_mongodb.Core.Entities;
@@ -31,7 +32,7 @@ namespace sample_api_mongodb.Api.Controllers
             return Ok(response);
         }
 
-
+        [Authorize(Roles = "Developer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {

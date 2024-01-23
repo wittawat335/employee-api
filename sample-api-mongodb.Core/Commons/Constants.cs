@@ -11,7 +11,7 @@ namespace sample_api_mongodb.Core.Commons
         public struct AppSettings
         {
             public const string Client_URL = "AppSettings:Client_URL";
-            public const string CorsPolicy = "AppSettings:CorsPolicy";
+            public const string CorsPolicy = "AppSettings:reactPolicy";
         }
 
         public struct StatusMessage

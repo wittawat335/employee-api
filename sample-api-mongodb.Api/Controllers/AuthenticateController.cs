@@ -29,7 +29,7 @@ namespace sample_api_mongodb.Api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateRole")]
+        [Route("createRole")]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequest request)
         {
 

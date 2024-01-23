@@ -92,7 +92,7 @@ namespace sample_api_mongodb.Core.Services
                     response.UserId = user.Id.ToString();
                     response.Email = user.Email;
                     response.Success = true;
-                    response.Message = "Login Successful";
+                    response.Message = "Login Successfully";
                 }
             }
             catch (Exception ex)
