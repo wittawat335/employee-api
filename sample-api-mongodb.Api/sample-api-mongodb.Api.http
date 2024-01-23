@@ -1,0 +1,6 @@
+@sample_api_mongodb.Api_HostAddress = http://localhost:5144
+
+GET {{sample_api_mongodb.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
