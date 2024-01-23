@@ -6,7 +6,6 @@ namespace sample_api_mongodb.Core.Services
 {
     public class UserService : IUserService
     {
-        //private readonly IGenericRepository<Users> _repository;
         private readonly IUserRepository _repository;
 
         public UserService(IUserRepository repository)

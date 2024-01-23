@@ -6,19 +6,16 @@ using sample_api_mongodb.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.InjectInfraConfig(builder.Configuration);
-builder.Services.InjectCoreConfig(builder.Configuration);
+builder.Services.InjectJWTConfig(builder.Configuration);
+builder.Services.InjectServices();
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

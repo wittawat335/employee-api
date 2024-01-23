@@ -9,12 +9,19 @@ using sample_api_mongodb.Core.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using sample_api_mongodb.Core.Interfaces;
+using sample_api_mongodb.Core.Services;
 
 namespace sample_api_mongodb.Core
 {
     public static class CoreConfiguration
     {
-        public static void InjectCoreConfig(this IServiceCollection services, IConfiguration configuration)
+        public static void InjectServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
+            services.AddScoped<IUserService, UserService>();
+        }
+        public static void InjectJWTConfig(this IServiceCollection services, IConfiguration configuration)
         {
             var key = Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:JWT:key").Value!);
 
