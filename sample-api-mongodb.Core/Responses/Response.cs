@@ -1,7 +1,6 @@
-﻿
-using sample_api_mongodb.Core.Commons;
+﻿using sample_api_mongodb.Core.Commons;
 
-namespace sample_api_mongodb.Api.Responses
+namespace sample_api_mongodb.Core.Responses
 {
     public class Response<T>
     {

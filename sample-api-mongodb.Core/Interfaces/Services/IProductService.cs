@@ -1,15 +1,11 @@
 ﻿using sample_api_mongodb.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using sample_api_mongodb.Core.Responses;
 
 namespace sample_api_mongodb.Core.Interfaces.Services
 {
     public interface IProductService
     {
-        public Task<List<Products>> GetAll();
-        public Task<Products> Get(int id);
+        public Task<Response<List<Products>>> GetAll();
+        public Task<Response<Products>> Get(int id);
     }
 }

@@ -14,43 +14,14 @@ namespace sample_api_mongodb.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = new Response<List<Products>>();
-            try
-            {
-                var query = await _service.GetAll();
-                if (query.Count() > 0)
-                {
-                    response.value = query;
-                    response.success = true;
-                    response.message = Constants.StatusMessage.Fetching_Success;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.message = ex.Message;
-            }
+            var response = await _service.GetAll();
             return Ok(response);
         }
 
-        [Authorize(Roles = "Developer")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var response = new Response<Products>();
-            try
-            {
-                var query = await _service.Get(id);
-                if (query != null)
-                {
-                    response.value = query;
-                    response.success = true;
-                    response.message = Constants.StatusMessage.Fetching_Success;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.message = ex.Message;
-            }
+            var response = await _service.Get(id);
             return Ok(response);
         }
     }

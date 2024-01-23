@@ -1,6 +1,8 @@
-﻿using sample_api_mongodb.Core.Entities;
+﻿using sample_api_mongodb.Core.Commons;
+using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
+using sample_api_mongodb.Core.Responses;
 
 namespace sample_api_mongodb.Core.Services
 {
@@ -13,28 +15,44 @@ namespace sample_api_mongodb.Core.Services
             _repository = repository;
         }
 
-        public async Task<Products> Get(int id)
+        public async Task<Response<Products>> Get(int id)
         {
+            var response = new Response<Products>();
             try
             {
-                return await _repository.FindOneAsync(x => x.ProductId == id);
+                var query = await _repository.FindOneAsync(x => x.ProductId == id);
+                if (query != null)
+                {
+                    response.value = query;
+                    response.success = true;
+                    response.message = Constants.StatusMessage.Fetching_Success;
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                response.message = ex.Message;
             }
+            return response;
         }
 
-        public async Task<List<Products>> GetAll()
+        public async Task<Response<List<Products>>> GetAll()
         {
+            var response = new Response<List<Products>>();
             try
             {
-                return await _repository.GetAll(); 
+                var query = await _repository.GetAll();
+                if (query.Count() > 0)
+                {
+                    response.value = query;
+                    response.success = true;
+                    response.message = Constants.StatusMessage.Fetching_Success;
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                response.message = ex.Message;
             }
+            return response;
         }
     }
 }
