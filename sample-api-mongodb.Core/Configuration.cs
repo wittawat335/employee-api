@@ -9,8 +9,8 @@ using sample_api_mongodb.Core.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using sample_api_mongodb.Core.Interfaces;
 using sample_api_mongodb.Core.Services;
+using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Core
 {
@@ -20,6 +20,7 @@ namespace sample_api_mongodb.Core
         {
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProductService, ProductService>();
         }
         public static void InjectJWTConfig(this IServiceCollection services, IConfiguration configuration)
         {

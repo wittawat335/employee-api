@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sample_api_mongodb.Core.Interfaces
+namespace sample_api_mongodb.Core.Interfaces.Repositories
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         Task<List<Users>> GetAll();
     }

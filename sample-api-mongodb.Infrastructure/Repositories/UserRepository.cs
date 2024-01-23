@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using sample_api_mongodb.Core.DBSettings;
 using sample_api_mongodb.Core.Entities;
-using sample_api_mongodb.Core.Interfaces;
+using sample_api_mongodb.Core.Interfaces.Repositories;
 
 namespace sample_api_mongodb.Infrastructure.Repositories
 {

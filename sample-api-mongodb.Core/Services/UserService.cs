@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using sample_api_mongodb.Core.Entities;
-using sample_api_mongodb.Core.Interfaces;
+using sample_api_mongodb.Core.Interfaces.Repositories;
+using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Core.Services
 {

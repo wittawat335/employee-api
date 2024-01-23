@@ -1,7 +1,7 @@
 ﻿using sample_api_mongodb.Core.DBSettings.Documents;
 using System.Linq.Expressions;
 
-namespace sample_api_mongodb.Core.Interfaces
+namespace sample_api_mongodb.Core.Interfaces.Repositories
 {
     public interface IGenericRepository<TDocument> where TDocument : IDocument
     {

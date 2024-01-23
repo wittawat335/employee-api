@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
-using sample_api_mongodb.Core.Interfaces;
+using sample_api_mongodb.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

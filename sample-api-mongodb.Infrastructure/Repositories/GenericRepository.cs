@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using sample_api_mongodb.Core.DBSettings;
 using sample_api_mongodb.Core.DBSettings.Documents;
-using sample_api_mongodb.Core.Interfaces;
+using sample_api_mongodb.Core.Interfaces.Repositories;
 using System.Linq.Expressions;
 
 namespace sample_api_mongodb.Infrastructure.Repositories

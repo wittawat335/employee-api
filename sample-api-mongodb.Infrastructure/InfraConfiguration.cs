@@ -3,8 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using sample_api_mongodb.Core.DBSettings;
-using sample_api_mongodb.Core.Interfaces;
-using sample_api_mongodb.Core.Services;
+using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Infrastructure.Repositories;
 
 namespace sample_api_mongodb.Infrastructure
