@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using sample_api_mongodb.Core.DBSettings;
 using sample_api_mongodb.Core.Interfaces;
+using sample_api_mongodb.Core.Services;
 using sample_api_mongodb.Infrastructure.Repositories;
 
 namespace sample_api_mongodb.Infrastructure
@@ -17,6 +18,7 @@ namespace sample_api_mongodb.Infrastructure
             serviceProvider.GetRequiredService<IOptions<DbSettings>>().Value);
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }
