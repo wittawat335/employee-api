@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using sample_api_mongodb.Core.Services;
 using sample_api_mongodb.Core.Interfaces.Services;
+using sample_api_mongodb.Core.AutoMapper;
 
 namespace sample_api_mongodb.Core
 {
@@ -18,6 +19,7 @@ namespace sample_api_mongodb.Core
     {
         public static void InjectServices(this IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
