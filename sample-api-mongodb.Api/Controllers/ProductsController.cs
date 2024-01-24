@@ -36,5 +36,12 @@ namespace sample_api_mongodb.Api.Controllers
             var response = await _service.Update(model);
             return Ok(response);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var response = await _service.Delete(id);
+            return Ok(response);
+        }
     }
 }
