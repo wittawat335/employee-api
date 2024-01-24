@@ -13,6 +13,7 @@ namespace sample_api_mongodb.Core.AutoMapper
     {
         public AutoMapperProfile() 
         {
+            //CreateMap<Products, ProductDTO>();
             CreateMap<ProductDTO, Products>().ReverseMap();
         }
     }

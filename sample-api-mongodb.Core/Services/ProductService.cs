@@ -19,15 +19,15 @@ namespace sample_api_mongodb.Core.Services
             _mapper = mapper;
         }
 
-        public async Task<Response<Products>> Get(int id)
+        public async Task<Response<ProductDTO>> Get(int id)
         {
-            var response = new Response<Products>();
+            var response = new Response<ProductDTO>();
             try
             {
                 var query = await _repository.FindOneAsync(x => x.ProductId == id);
                 if (query != null)
                 {
-                    response.value = query;
+                    response.value = _mapper.Map<ProductDTO>(query);
                     response.success = true;
                     response.message = Constants.StatusMessage.Fetching_Success;
                 }
@@ -39,15 +39,15 @@ namespace sample_api_mongodb.Core.Services
             return response;
         }
 
-        public async Task<Response<List<Products>>> GetAll()
+        public async Task<Response<List<ProductDTO>>> GetAll()
         {
-            var response = new Response<List<Products>>();
+            var response = new Response<List<ProductDTO>>();
             try
             {
                 var query = await _repository.GetAll();
                 if (query.Count() > 0)
                 {
-                    response.value = query;
+                    response.value = _mapper.Map<List<ProductDTO>>(query);
                     response.success = true;
                     response.message = Constants.StatusMessage.Fetching_Success;
                 }
