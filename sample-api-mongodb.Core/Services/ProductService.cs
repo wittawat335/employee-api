@@ -19,8 +19,6 @@ namespace sample_api_mongodb.Core.Services
             _mapper = mapper;
         }
 
-
-
         public async Task<Response<Products>> Get(int id)
         {
             var response = new Response<Products>();
@@ -87,7 +85,7 @@ namespace sample_api_mongodb.Core.Services
                 var id = await _repository.FindOneAsync(x => x.ProductId == model.ProductId);
                 await _repository.ReplaceOneAsync(_mapper.Map(model, id));
                 response.success = true;
-                response.message = Constants.StatusMessage.InsertSuccessfully;
+                response.message = Constants.StatusMessage.UpdateSuccessfully;
             }
             catch (Exception ex)
             {
@@ -96,9 +94,20 @@ namespace sample_api_mongodb.Core.Services
             return response;
         }
 
-        public Task<Response<Products>> Delete(int id)
+        public async Task<Response<Products>> Delete(int id)
         {
-            throw new NotImplementedException();
+            var response = new Response<Products>();
+            try
+            {
+                await _repository.DeleteOneAsync(x => x.ProductId == id);
+                response.success = true;
+                response.message = Constants.StatusMessage.DeleteSuccessfully;
+            }
+            catch (Exception ex)
+            {
+                response.message = ex.Message;
+            }
+            return response;
         }
     }
 }

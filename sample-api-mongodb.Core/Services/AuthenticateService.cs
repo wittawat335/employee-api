@@ -90,6 +90,7 @@ namespace sample_api_mongodb.Core.Services
                         );
                     response.Token = new JwtSecurityTokenHandler().WriteToken(token);
                     response.UserId = user.Id.ToString();
+                    response.Roles = roles;
                     response.Email = user.Email;
                     response.Success = true;
                     response.Message = "Login Successfully";
@@ -128,7 +129,7 @@ namespace sample_api_mongodb.Core.Services
                     }
                     else
                     {
-                        var addUserToRoleResult = await _userManager.AddToRoleAsync(user, "USER");
+                        var addUserToRoleResult = await _userManager.AddToRoleAsync(user, request.Role);
                         if (!addUserToRoleResult.Succeeded)
                         {
                             response.Message = $"Create user succeeded but could not add user to role {addUserToRoleResult?.Errors?.First()?.Description}";
