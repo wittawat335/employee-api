@@ -53,6 +53,11 @@ namespace sample_api_mongodb.Core.Services
             try
             {
                 var user = await _userManager.FindByEmailAsync(request.Email);
+                if (!user.Active)
+                {
+                    response.Message = "user is inactive";
+                    return response;
+                }
                 if (user == null)
                 {
                     response.Message = "Invalid email";
