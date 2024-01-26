@@ -16,7 +16,7 @@ namespace sample_api_mongodb.Core.Commons
 
         public struct StatusMessage
         {
-            public const string RegisterSuccess = "ลงทะเบียนสำเร็จ";
+            public const string RegisterSuccess = "Registered successfully";
             public const string LoginSuccess = "เข้าสู่ระบบสำเร็จ";
             public const string InvaildPassword = "รหัสผ่านไม่ถูกต้อง";
             public const string NotFoundUser = "ไม่มีบัญชีผู้ใช้นี้";

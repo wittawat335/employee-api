@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using sample_api_mongodb.Core.Commons;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Services;
@@ -35,7 +36,6 @@ namespace sample_api_mongodb.Core.Services
 
                 var role = new ApplicationRole
                 {
-                    RoleCode = request.RoleCode,
                     Name = request.RoleName,
                     Active = request.Active
                 };
@@ -56,11 +56,13 @@ namespace sample_api_mongodb.Core.Services
                 if (user == null)
                 {
                     response.Message = "Invalid email";
+                    return response;
                 }
                 var verifyResult = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
                 if (verifyResult == PasswordVerificationResult.Failed)
                 {
                     response.Message = "Invalid password";
+                    return response;
                 }
                 else
                 {
@@ -117,10 +119,10 @@ namespace sample_api_mongodb.Core.Services
                 {
                     user = new ApplicationUser
                     {
-                        FullName = request.FullName,
+                        FullName = request.Fullname,
                         Email = request.Email,
                         ConcurrencyStamp = Guid.NewGuid().ToString(),
-                        UserName = request.Email,
+                        UserName = request.Username,
                     };
                     var createUserResult = await _userManager.CreateAsync(user, request.Password);
                     if (!createUserResult.Succeeded)
@@ -136,7 +138,7 @@ namespace sample_api_mongodb.Core.Services
                         }
                         else
                         {
-                            response.Message = "User registered successfully";
+                            response.Message = Constants.StatusMessage.RegisterSuccess;
                             response.Success = true;
                         }
                     }

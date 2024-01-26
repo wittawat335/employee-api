@@ -11,7 +11,6 @@ namespace sample_api_mongodb.Core.Entities
     [CollectionName("roles")]
     public class ApplicationRole : MongoIdentityRole<Guid>
     {
-        public string? RoleCode { get; set; }
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
     }
 }

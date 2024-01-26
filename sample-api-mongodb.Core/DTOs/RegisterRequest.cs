@@ -13,7 +13,7 @@ namespace sample_api_mongodb.Core.DTOs
         public string Email { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         [Required]
-        public string FullName { get; set; } = string.Empty;
+        public string Fullname { get; set; } = string.Empty;
         [Required]
         public string Role { get; set; } = string.Empty;
         [Required, DataType(DataType.Password)]

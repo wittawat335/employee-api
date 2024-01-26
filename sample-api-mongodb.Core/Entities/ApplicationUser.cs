@@ -7,5 +7,6 @@ namespace sample_api_mongodb.Core.Entities
     public class ApplicationUser : MongoIdentityUser<Guid>
     {
         public string FullName { get; set; } = string.Empty;
+        public bool Active { get; set; } = true;
     }
 }
