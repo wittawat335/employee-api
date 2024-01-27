@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace sample_api_mongodb.Core.Interfaces.Repositories
 {
-    public interface IUserRepository
+    public interface IRoleRepository
     {
-        Task<List<Users>> GetAll();
-        IQueryable<Users> AsQueryable();
+        Task<List<Roles>> GetAll();
+        IQueryable<Roles> AsQueryable();
     }
 }

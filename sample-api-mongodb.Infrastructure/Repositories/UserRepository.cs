@@ -16,6 +16,8 @@ namespace sample_api_mongodb.Infrastructure.Repositories
             _collection = mongoClient.GetDatabase(options.Value.DatabaseName).GetCollection<Users>("users");
         }
 
+        public IQueryable<Users> AsQueryable() => _collection.AsQueryable();
+
         public async Task<List<Users>> GetAll() => await _collection.Find(x => true).ToListAsync();
     }
 }
