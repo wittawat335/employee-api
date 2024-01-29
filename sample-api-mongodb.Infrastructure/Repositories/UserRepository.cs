@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using sample_api_mongodb.Core.DBSettings;
 using sample_api_mongodb.Core.Entities;

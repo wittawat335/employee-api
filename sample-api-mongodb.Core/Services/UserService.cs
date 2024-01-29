@@ -23,6 +23,38 @@ namespace sample_api_mongodb.Core.Services
             _userManager = userManager;
         }
 
+        public async Task<Response<string>> Delete(string id)
+        {
+            var response = new Response<string>();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                var logins = user.Logins;
+                var rolesForUser = await _userManager.GetRolesAsync(user);
+                foreach (var login in logins.ToList())
+                {
+                    await _userManager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
+                }
+
+                if (rolesForUser.Count() > 0)
+                {
+                    foreach (var item in rolesForUser.ToList())
+                    {
+                        // item should be the name of the role
+                        var result = await _userManager.RemoveFromRoleAsync(user, item);
+                    }
+                }
+
+                await _userManager.DeleteAsync(user);
+                response.message = Constants.StatusMessage.DeleteSuccessfully;
+            }
+            catch (Exception ex) 
+            { 
+                response.message = ex.Message;
+            }
+            return response;
+        }
+
         public async Task<Response<List<UserDTO>>> GetAll()
         {
             var response = new Response<List<UserDTO>>();

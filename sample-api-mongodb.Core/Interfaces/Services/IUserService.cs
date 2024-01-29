@@ -12,5 +12,6 @@ namespace sample_api_mongodb.Core.Interfaces.Services
     public interface IUserService
     {
         Task<Response<List<UserDTO>>> GetAll();
+        Task<Response<string>> Delete(string id);
     }
 }
