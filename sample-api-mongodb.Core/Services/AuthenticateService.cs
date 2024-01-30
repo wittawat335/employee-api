@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver.Linq;
 using sample_api_mongodb.Core.Commons;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
@@ -48,30 +49,33 @@ namespace sample_api_mongodb.Core.Services
             var response = new LoginResponse();
             try
             {
-                var jwtKey = _configuration.GetSection("AppSettings:JWT:key").Value;
                 var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, user.UserName),
+                        new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new (JwtRegisteredClaimNames.Sub, user.Email!),
+                        new (JwtRegisteredClaimNames.Email, user.Email!),
+                        new (JwtRegisteredClaimNames.Name, user.UserName!),
                     };
+
                 var roles = await _userManager.GetRolesAsync(user);
-                var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x));
+                var roleClaims = roles.Select(x => new Claim("roles", x));
                 claims.AddRange(roleClaims);
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:JWT:key"]!));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
                     issuer: _configuration["AppSettings:JWT:Issuer"],
                     audience: _configuration["AppSettings:JWT:Audience"],
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(30),
+                    expires: DateTime.Now.AddMinutes(Int16.Parse(_configuration["AppSettings:JWT:Expires"]!)),
                     signingCredentials: creds
                     );
 
                 response.Token = new JwtSecurityTokenHandler().WriteToken(token);
                 response.UserId = user.Id.ToString();
                 response.Roles = roles;
-                response.Email = user.Email;
+                response.Email = user.Email!;
                 response.Success = true;
                 response.Message = "Login Successfully";
 
