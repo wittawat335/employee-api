@@ -10,6 +10,16 @@ namespace sample_api_mongodb.Api.Controllers
     [ApiController]
     public class AuthenticateController(IAuthenticateService _service) : ControllerBase
     {
+        //[HttpPost]
+        //[Route("refresh-token")]
+        //public async Task<IActionResult> RefreshToken()
+        //{
+
+        //    var response = await _service.LoginAsync(request);
+
+        //    return Ok(response);
+        //}
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)

@@ -27,8 +27,6 @@ namespace sample_api_mongodb.Core
         }
         public static void InjectJWTConfig(this IServiceCollection services, IConfiguration configuration)
         {
-            var key = Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:JWT:key").Value!);
-
             BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeSerializer(MongoDB.Bson.BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
@@ -47,11 +45,8 @@ namespace sample_api_mongodb.Core
                     //lockout
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
                     options.Lockout.MaxFailedAccessAttempts = 5;
-
                     options.User.RequireUniqueEmail = true;
-
                 }
-
             };
 
             services.ConfigureMongoDbIdentity<ApplicationUser, ApplicationRole, Guid>(mongoDbIdentityConfig)
@@ -74,11 +69,9 @@ namespace sample_api_mongodb.Core
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidIssuer = "https://localhost:5001",
-                    ValidAudience = "https://localhost:5001",
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ClockSkew = TimeSpan.Zero
-
+                    ValidIssuer = configuration["AppSettings:JWT:Issuer"],
+                    ValidAudience = configuration["AppSettings:JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:JWT:Key"]!))
                 };
             });
         }

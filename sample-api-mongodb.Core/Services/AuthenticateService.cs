@@ -5,13 +5,9 @@ using sample_api_mongodb.Core.Commons;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Services;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace sample_api_mongodb.Core.Services
 {
@@ -21,7 +17,7 @@ namespace sample_api_mongodb.Core.Services
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticateService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, 
+        public AuthenticateService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,
             IConfiguration configuration)
         {
             _userManager = userManager;
@@ -42,6 +38,46 @@ namespace sample_api_mongodb.Core.Services
                 var createRole = await _roleManager.CreateAsync(role);
             }
             catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<LoginResponse> CreateToken(ApplicationUser user)
+        {
+            var response = new LoginResponse();
+            try
+            {
+                var jwtKey = _configuration.GetSection("AppSettings:JWT:key").Value;
+                var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.UserName),
+                    };
+                var roles = await _userManager.GetRolesAsync(user);
+                var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x));
+                claims.AddRange(roleClaims);
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    issuer: _configuration["AppSettings:JWT:Issuer"],
+                    audience: _configuration["AppSettings:JWT:Audience"],
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(30),
+                    signingCredentials: creds
+                    );
+
+                response.Token = new JwtSecurityTokenHandler().WriteToken(token);
+                response.UserId = user.Id.ToString();
+                response.Roles = roles;
+                response.Email = user.Email;
+                response.Success = true;
+                response.Message = "Login Successfully";
+
+                return response;
+            }
+            catch
             {
                 throw;
             }
@@ -71,43 +107,20 @@ namespace sample_api_mongodb.Core.Services
                 }
                 else
                 {
-                    var jwtKey = _configuration.GetSection("AppSettings:JWT:key").Value;
-                    var claims = new List<Claim>
-                    {
-                        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                        new Claim(ClaimTypes.Name, user.UserName),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-                    };
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x));
-                    claims.AddRange(roleClaims);
-
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                    var expires = DateTime.Now.AddMinutes(30);
-
-                    var token = new JwtSecurityToken(
-                        issuer: "https://localhost:5001",
-                        audience: "https://localhost:5001",
-                        claims: claims,
-                        expires: expires,
-                        signingCredentials: creds
-
-                        );
-                    response.Token = new JwtSecurityTokenHandler().WriteToken(token);
-                    response.UserId = user.Id.ToString();
-                    response.Roles = roles;
-                    response.Email = user.Email;
-                    response.Success = true;
-                    response.Message = "Login Successfully";
+                    response = await CreateToken(user);
                 }
             }
             catch (Exception ex)
             {
                 response.Message = ex.Message;
             }
+
             return response;
+        }
+
+        public Task<LoginResponse> RefreshToken(LoginResponse token)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<RegisterReaponse> RegisterAsync(RegisterRequest request)
@@ -128,6 +141,7 @@ namespace sample_api_mongodb.Core.Services
                         Email = request.Email,
                         ConcurrencyStamp = Guid.NewGuid().ToString(),
                         UserName = request.Username,
+                        EmailConfirmed = true,
                     };
                     var createUserResult = await _userManager.CreateAsync(user, request.Password);
                     if (!createUserResult.Succeeded)

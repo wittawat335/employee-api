@@ -1,9 +1,5 @@
 ﻿using sample_api_mongodb.Core.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using sample_api_mongodb.Core.Entities;
 
 namespace sample_api_mongodb.Core.Interfaces.Services
 {
@@ -11,6 +7,8 @@ namespace sample_api_mongodb.Core.Interfaces.Services
     {
         Task<LoginResponse> LoginAsync(LoginRequest request);
         Task<RegisterReaponse> RegisterAsync(RegisterRequest request);
+        Task<LoginResponse> CreateToken(ApplicationUser user);
+        Task<LoginResponse> RefreshToken(LoginResponse token);
         Task CreateRole(CreateRoleRequest request);
     }
 }
