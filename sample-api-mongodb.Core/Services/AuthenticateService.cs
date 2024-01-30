@@ -16,13 +16,15 @@ namespace sample_api_mongodb.Core.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticateService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager,
+        public AuthenticateService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager, RoleManager<ApplicationRole> roleManager,
             IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _signManager = signManager;
             _configuration = configuration;
         }
 
@@ -38,7 +40,7 @@ namespace sample_api_mongodb.Core.Services
                 };
                 var createRole = await _roleManager.CreateAsync(role);
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }
@@ -62,22 +64,23 @@ namespace sample_api_mongodb.Core.Services
                 claims.AddRange(roleClaims);
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:JWT:key"]!));
+                var expires = DateTime.Now.AddMinutes(Int16.Parse(_configuration["AppSettings:JWT:Expires"]!));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
                     issuer: _configuration["AppSettings:JWT:Issuer"],
                     audience: _configuration["AppSettings:JWT:Audience"],
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(Int16.Parse(_configuration["AppSettings:JWT:Expires"]!)),
+                    expires: expires,
                     signingCredentials: creds
                     );
 
-                response.Token = new JwtSecurityTokenHandler().WriteToken(token);
-                response.UserId = user.Id.ToString();
-                response.Roles = roles;
-                response.Email = user.Email!;
-                response.Success = true;
-                response.Message = "Login Successfully";
+                response.token = new JwtSecurityTokenHandler().WriteToken(token);
+                response.userId = user.Id.ToString();
+                response.roles = roles;
+                response.email = user.Email!;
+                response.success = true;
+                response.message = "Login Successfully";
 
                 return response;
             }
@@ -93,20 +96,15 @@ namespace sample_api_mongodb.Core.Services
             try
             {
                 var user = await _userManager.FindByEmailAsync(request.Email);
-                if (!user.Active)
-                {
-                    response.Message = "user is inactive";
-                    return response;
-                }
                 if (user == null)
                 {
-                    response.Message = "Invalid email";
+                    response.message = "Invalid email";
                     return response;
                 }
-                var verifyResult = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+                var verifyResult = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash!, request.Password);
                 if (verifyResult == PasswordVerificationResult.Failed)
                 {
-                    response.Message = "Invalid password";
+                    response.message = "Invalid password";
                     return response;
                 }
                 else
@@ -116,7 +114,7 @@ namespace sample_api_mongodb.Core.Services
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
+                response.message = ex.Message;
             }
 
             return response;
@@ -166,7 +164,6 @@ namespace sample_api_mongodb.Core.Services
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {

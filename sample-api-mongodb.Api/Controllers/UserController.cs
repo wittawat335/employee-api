@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Services;
+using sample_api_mongodb.Core.Responses;
+using System.Net;
 
 namespace sample_api_mongodb.Api.Controllers
 {
@@ -16,7 +18,7 @@ namespace sample_api_mongodb.Api.Controllers
         public async Task<IActionResult> GetAll()
         {
             var response = await _service.GetAll();
-            return Ok(response);
+            return response.success ? Ok(response) : BadRequest(response.message);
         }
 
         //[HttpPost]
@@ -37,7 +39,7 @@ namespace sample_api_mongodb.Api.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var response = await _service.Delete(id);
-            return Ok(response);
+            return response.success ? Ok(response) : BadRequest(response.message);
         }
     }
 }

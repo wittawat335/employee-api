@@ -69,6 +69,8 @@ namespace sample_api_mongodb.Core
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+
                     ValidIssuer = configuration["AppSettings:JWT:Issuer"],
                     ValidAudience = configuration["AppSettings:JWT:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:JWT:Key"]!))
