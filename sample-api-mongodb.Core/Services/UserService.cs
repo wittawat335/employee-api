@@ -12,47 +12,17 @@ namespace sample_api_mongodb.Core.Services
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository repository, IMapper mapper, 
-            RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
+        public UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IUserRepository repository, 
+            IMapper mapper)
         {
-            _repository = repository;
-             _mapper = mapper;
             _userManager = userManager;
-        }
-
-        public async Task<Response<string>> Delete(string id)
-        {
-            var response = new Response<string>();
-            try
-            {
-                var user = await _userManager.FindByIdAsync(id);
-                var logins = user.Logins;
-                var rolesForUser = await _userManager.GetRolesAsync(user);
-                foreach (var login in logins.ToList())
-                {
-                    await _userManager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
-                }
-
-                if (rolesForUser.Count() > 0)
-                {
-                    foreach (var item in rolesForUser.ToList())
-                    {
-                        // item should be the name of the role
-                        var result = await _userManager.RemoveFromRoleAsync(user, item);
-                    }
-                }
-
-                await _userManager.DeleteAsync(user);
-                response.message = Constants.StatusMessage.DeleteSuccessfully;
-            }
-            catch (Exception ex) 
-            { 
-                response.message = ex.Message;
-            }
-            return response;
+            _roleManager = roleManager;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<Response<List<UserDTO>>> GetAll()
@@ -85,5 +55,48 @@ namespace sample_api_mongodb.Core.Services
             }
             return response;
         }
+
+        public Task<Response<UserDTO>> Insert(UserDTO model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Response<UserDTO>> Update(UserDTO model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Response<string>> Delete(string id)
+        {
+            var response = new Response<string>();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                var logins = user!.Logins;
+                var rolesForUser = await _userManager.GetRolesAsync(user);
+                foreach (var login in logins.ToList())
+                {
+                    await _userManager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
+                }
+
+                if (rolesForUser.Count() > 0)
+                {
+                    foreach (var item in rolesForUser.ToList())
+                    {
+                        // item should be the name of the role
+                        var result = await _userManager.RemoveFromRoleAsync(user, item);
+                    }
+                }
+
+                await _userManager.DeleteAsync(user);
+                response.message = Constants.StatusMessage.DeleteSuccessfully;
+            }
+            catch (Exception ex)
+            {
+                response.message = ex.Message;
+            }
+            return response;
+        }
+
     }
 }

@@ -9,7 +9,7 @@ using System.Net;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-    [Authorize(Roles = "Developer, Administrator")]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController(IUserService _service) : ControllerBase
@@ -35,6 +35,7 @@ namespace sample_api_mongodb.Api.Controllers
         //    return Ok(response);
         //}
 
+        [Authorize(Roles = "Developer, Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
