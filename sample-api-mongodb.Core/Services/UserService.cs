@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Amazon.Runtime.Internal;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using sample_api_mongodb.Core.Commons;
 using sample_api_mongodb.Core.DTOs;
@@ -56,9 +57,18 @@ namespace sample_api_mongodb.Core.Services
             return response;
         }
 
-        public Task<Response<UserDTO>> Insert(UserDTO model)
+        public async Task<Response<UserDTO>> Insert(UserDTO model)
         {
-            throw new NotImplementedException();
+            var response = new Response<UserDTO>();
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(model.email);
+            }
+            catch(Exception ex)
+            {
+                response.message = ex.Message;
+            }
+            return response;
         }
 
         public Task<Response<UserDTO>> Update(UserDTO model)

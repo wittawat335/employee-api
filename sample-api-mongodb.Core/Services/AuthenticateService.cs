@@ -15,35 +15,12 @@ namespace sample_api_mongodb.Core.Services
     public class AuthenticateService : IAuthenticateService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly SignInManager<ApplicationUser> _signManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticateService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager, RoleManager<ApplicationRole> roleManager,
-            IConfiguration configuration)
+        public AuthenticateService(UserManager<ApplicationUser> userManager,IConfiguration configuration)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
-            _signManager = signManager;
             _configuration = configuration;
-        }
-
-        public async Task CreateRole(CreateRoleRequest request)
-        {
-            try
-            {
-
-                var role = new ApplicationRole
-                {
-                    Name = request.RoleName,
-                    Active = request.Active
-                };
-                var createRole = await _roleManager.CreateAsync(role);
-            }
-            catch
-            {
-                throw;
-            }
         }
 
         public async Task<LoginResponse> CreateToken(ApplicationUser user)

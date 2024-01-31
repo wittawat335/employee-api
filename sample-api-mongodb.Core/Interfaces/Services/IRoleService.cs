@@ -12,5 +12,7 @@ namespace sample_api_mongodb.Core.Interfaces.Services
     public interface IRoleService
     {
         Task<Response<List<Roles>>> GetAll();
+        Task CreateRole(CreateRoleRequest request);
+
     }
 }

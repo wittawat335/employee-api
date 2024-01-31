@@ -1,24 +1,23 @@
-﻿using sample_api_mongodb.Core.Commons;
+﻿using Microsoft.AspNetCore.Identity;
+using sample_api_mongodb.Core.Commons;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
 using sample_api_mongodb.Core.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sample_api_mongodb.Core.Services
 {
     public class RoleService : IRoleService
     {
         private readonly IRoleRepository _repository;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public RoleService(IRoleRepository repository)
+
+        public RoleService(IRoleRepository repository, RoleManager<ApplicationRole> roleManager)
         {
             _repository = repository;
+            _roleManager = roleManager;
         }
 
         public async Task<Response<List<Roles>>> GetAll()
@@ -39,6 +38,19 @@ namespace sample_api_mongodb.Core.Services
                 response.message = ex.Message;
             }
             return response;
+        }
+
+        public async Task CreateRole(CreateRoleRequest request)
+        {
+            try
+            {
+                var role = new ApplicationRole { Name = request.RoleName, Active = request.Active };
+                var createRole = await _roleManager.CreateAsync(role);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

@@ -39,14 +39,5 @@ namespace sample_api_mongodb.Api.Controllers
             var response = await _service.RegisterAsync(request);
             return response.Success ? Ok(response) : BadRequest(response.Message);
         }
-
-        [HttpPost]
-        [Route("createRole")]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(LoginResponse))]
-        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequest request)
-        {
-            await _service.CreateRole(request);
-            return Ok("success");
-        }
     }
 }
