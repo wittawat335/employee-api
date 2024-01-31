@@ -129,7 +129,8 @@ namespace sample_api_mongodb.Core.Services
                     }
                     else
                     {
-                        var addUserToRoleResult = await _userManager.AddToRoleAsync(user, request.Role);
+                        //var addUserToRoleResult = await _userManager.AddToRoleAsync(user, request.Role);
+                        var addUserToRoleResult = await _userManager.AddToRolesAsync(user, request.Roles);
                         if (!addUserToRoleResult.Succeeded)
                         {
                             response.Message = $"Create user succeeded but could not add user to role {addUserToRoleResult?.Errors?.First()?.Description}";

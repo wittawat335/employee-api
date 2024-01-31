@@ -39,7 +39,7 @@ namespace sample_api_mongodb.Core.Services
                     {
                         var user = new Users();
                         _mapper.Map(item, user);
-                        user.Roles = string.Join(", ", _userManager.GetRolesAsync(item).Result.ToArray());
+                        user.Roles = string.Join(",", _userManager.GetRolesAsync(item).Result.ToArray());
                         listUser.Add(user);
                     }
                     if (listUser.Count() > 0)
@@ -57,12 +57,29 @@ namespace sample_api_mongodb.Core.Services
             return response;
         }
 
-        public async Task<Response<UserDTO>> Insert(UserDTO model)
+        public async Task<Response<UserDTO>> Insert(RegisterRequest model)
         {
             var response = new Response<UserDTO>();
             try
             {
-                var user = await _userManager.FindByEmailAsync(model.email);
+                var user = new ApplicationUser
+                {
+                    FullName = model.Fullname,
+                    Email = model.Email,
+                    ConcurrencyStamp = Guid.NewGuid().ToString(),
+                    UserName = model.Username,
+                    EmailConfirmed = true,
+                };
+                var createUserResult = await _userManager.CreateAsync(user, model.Password);
+                if (createUserResult.Succeeded)
+                {
+                    var addUserToRoleResult = await _userManager.AddToRolesAsync(user, model.Roles!);
+                    if (addUserToRoleResult.Succeeded)
+                    {
+                        response.message = Constants.StatusMessage.InsertSuccessfully;
+                        response.success = true;
+                    }
+                }
             }
             catch(Exception ex)
             {
@@ -71,9 +88,38 @@ namespace sample_api_mongodb.Core.Services
             return response;
         }
 
-        public Task<Response<UserDTO>> Update(UserDTO model)
+        public async Task<Response<UserDTO>> Update(UserDTO model)
         {
-            throw new NotImplementedException();
+            var response = new Response<UserDTO>();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(model.id);
+                if (user != null)
+                {
+                    var update = _mapper.Map(model, user);
+                    var result = await _userManager.UpdateAsync(update!);
+                    if (result.Succeeded)
+                    {
+                        var getRoles = await _userManager.GetRolesAsync(user);
+                        var removeroles = await _userManager.RemoveFromRolesAsync(user, getRoles.ToArray());
+                        var roles = model.roles.Split(',').ToList();
+                        if (removeroles.Succeeded)
+                        {
+                            var addroles = await _userManager.AddToRolesAsync(user, roles.ToArray());
+                            if (addroles.Succeeded)
+                            {
+                                response.message = Constants.StatusMessage.UpdateSuccessfully;
+                                response.success = true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                response.message = ex.Message;
+            }
+            return response;
         }
 
         public async Task<Response<string>> Delete(string id)
