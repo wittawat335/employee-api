@@ -54,10 +54,10 @@ namespace sample_api_mongodb.Core.Services
 
                 response.token = new JwtSecurityTokenHandler().WriteToken(token);
                 response.userId = user.Id.ToString();
-                response.roles = roles;
+                response.roles = new List<string>(roles);
                 response.email = user.Email!;
-                response.success = true;
-                response.message = "Login Successfully";
+                response.username = user.UserName!;
+                response.fullname = user.FullName;
 
                 return response;
             }
@@ -73,25 +73,15 @@ namespace sample_api_mongodb.Core.Services
             try
             {
                 var user = await _userManager.FindByEmailAsync(request.Email);
-                if (user == null)
-                {
-                    response.message = "Invalid email";
-                    return response;
-                }
                 var verifyResult = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash!, request.Password);
-                if (verifyResult == PasswordVerificationResult.Failed)
-                {
-                    response.message = "Invalid password";
-                    return response;
-                }
-                else
+                if (verifyResult == PasswordVerificationResult.Success)
                 {
                     response = await CreateToken(user);
                 }
             }
-            catch (Exception ex)
+            catch 
             {
-                response.message = ex.Message;
+                throw;
             }
 
             return response;
@@ -129,8 +119,7 @@ namespace sample_api_mongodb.Core.Services
                     }
                     else
                     {
-                        //var addUserToRoleResult = await _userManager.AddToRoleAsync(user, request.Role);
-                        var addUserToRoleResult = await _userManager.AddToRolesAsync(user, request.Roles);
+                        var addUserToRoleResult = await _userManager.AddToRoleAsync(user, "User");
                         if (!addUserToRoleResult.Succeeded)
                         {
                             response.Message = $"Create user succeeded but could not add user to role {addUserToRoleResult?.Errors?.First()?.Description}";

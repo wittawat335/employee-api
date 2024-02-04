@@ -24,15 +24,13 @@ namespace sample_api_mongodb.Api.Controllers
 
         [HttpPost]
         [Route("login")]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(LoginResponse))]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var response = await _service.LoginAsync(request);
-            return response.success ? Ok(response) : BadRequest(response.message);
+            return Ok(response);
         }
         [HttpPost]
         [Route("register")]
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(RegisterReaponse))]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
 

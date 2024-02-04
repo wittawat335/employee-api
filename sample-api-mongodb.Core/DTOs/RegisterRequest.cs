@@ -15,7 +15,7 @@ namespace sample_api_mongodb.Core.DTOs
         [Required]
         public string Fullname { get; set; } = string.Empty;
         [Required]
-        public List<string> Roles { get; set; } 
+        public List<string>? Roles { get; set; } 
         [Required, DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
         [Required, DataType(DataType.Password), Compare(nameof(Password), ErrorMessage ="Password not match")]
