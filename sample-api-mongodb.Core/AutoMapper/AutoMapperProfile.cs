@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MongoDB.Driver;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 
@@ -11,7 +10,11 @@ namespace sample_api_mongodb.Core.AutoMapper
         {
             //CreateMap<Products, ProductDTO>();
             CreateMap<ProductDTO, Products>().ReverseMap();
-            CreateMap<UserDTO, Users>().ReverseMap();
+            CreateMap<UserDTO, Users>();
+            CreateMap<Users, UserDTO>().ForMember(x =>
+               x.active,
+               opt => opt.MapFrom(origin => origin.Active == true ? "Active" : "InActive")
+               );
             CreateMap<ApplicationUser, Users>()
                 .ForMember(x => x.Id, opt => opt.MapFrom(origin => origin.Id.ToString()));
 

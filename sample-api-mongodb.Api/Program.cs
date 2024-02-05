@@ -3,8 +3,10 @@ using sample_api_mongodb.Core;
 using sample_api_mongodb.Core.Commons;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using sample_api_mongodb.Core.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
+//var services = builder.Services;
 var clientUrl = builder.Configuration[Constants.AppSettings.Client_URL]?.ToString();
 var cors = builder.Configuration[Constants.AppSettings.CorsPolicy]?.ToString();
 
@@ -32,7 +34,11 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+builder.Services.AddExceptionHandler<GeneralExceptionHandler>();
+builder.Services.AddExceptionHandler<AppExceptionHandler>();
+
 var app = builder.Build();
+app.UseExceptionHandler(_ => { });
 
 if (app.Environment.IsDevelopment())
 {
@@ -41,7 +47,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(cors!);
-//app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

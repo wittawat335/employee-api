@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Interfaces.Services;
+using sample_api_mongodb.Api.Responses;
 
 namespace sample_api_mongodb.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController(IProductService _service) : ControllerBase
@@ -12,36 +14,37 @@ namespace sample_api_mongodb.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = await _service.GetAll();
-            return Ok(response);
+            var response = new Response<List<ProductDTO>>();
+            response.payload = await _service.GetAll();
+            return response.payload.Count() > 0 ? Ok(response) : NotFound();
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var response = await _service.Get(id);
-            return Ok(response);
+            return Ok();
         }
 
         [HttpPost]
         public async Task<IActionResult> Insert(ProductDTO model)
         {
-            var response = await _service.Insert(model);
-            return Ok(response);
+            await _service.Insert(model);
+            return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(ProductDTO model)
         {
-            var response = await _service.Update(model);
-            return Ok(response);
+            await _service.Update(model);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _service.Delete(id);
-            return Ok(response);
+            await _service.Delete(id);
+            return Ok();
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using sample_api_mongodb.Core.Commons;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
-using sample_api_mongodb.Core.Responses;
+using System.Collections.Generic;
 
 namespace sample_api_mongodb.Core.Services
 {
@@ -19,95 +18,42 @@ namespace sample_api_mongodb.Core.Services
             _mapper = mapper;
         }
 
-        public async Task<Response<ProductDTO>> Get(int id)
+        public async Task<ProductDTO> Get(int id)
         {
-            var response = new Response<ProductDTO>();
-            try
-            {
-                var query = await _repository.FindOneAsync(x => x.ProductId == id);
-                if (query != null)
-                {
-                    response.value = _mapper.Map<ProductDTO>(query);
-                    response.success = true;
-                    response.message = Constants.StatusMessage.Fetching_Success;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.message = ex.Message;
-            }
-            return response;
+            var query = await _repository.FindOneAsync(x => x.ProductId == id);
+            return _mapper.Map<ProductDTO>(query);
         }
 
-        public async Task<Response<List<ProductDTO>>> GetAll()
+        public async Task<List<ProductDTO>> GetAll()
         {
-            var response = new Response<List<ProductDTO>>();
-            try
+            var products = new List<ProductDTO>();
+            var query = await _repository.GetAll();
+            if (query.Count() > 0)
             {
-                var query = await _repository.GetAll();
-                if (query.Count() > 0)
-                {
-                    response.value = _mapper.Map<List<ProductDTO>>(query);
-                    response.success = true;
-                    response.message = Constants.StatusMessage.Fetching_Success;
-                }
+                products = _mapper.Map<List<ProductDTO>>(query);
             }
-            catch (Exception ex)
-            {
-                response.message = ex.Message;
-            }
-            return response;
+            return products;
         }
 
-        public async Task<Response<Products>> Insert(ProductDTO model)
+        public async Task Insert(ProductDTO model)
         {
-            var response = new Response<Products>();
-            try
+            var id = _repository.AsQueryable().OrderByDescending(x => x.ProductId).Select(b => b.ProductId).First();
+            if (id >= 0)
             {
-                var id = _repository.AsQueryable().OrderByDescending(x => x.ProductId).Select(b => b.ProductId).First();
                 model.ProductId = id + 1;
                 await _repository.InsertOneAsync(_mapper.Map<Products>(model));
-                response.success = true;
-                response.message = Constants.StatusMessage.InsertSuccessfully;
             }
-            catch (Exception ex)
-            {
-                response.message = ex.Message;
-            }
-            return response;
         }
 
-        public async Task<Response<Products>> Update(ProductDTO model)
+        public async Task Update(ProductDTO model)
         {
-            var response = new Response<Products>();
-            try
+            var id = await _repository.FindOneAsync(x => x.ProductId == model.ProductId);
+            if(id != null)
             {
-                var id = await _repository.FindOneAsync(x => x.ProductId == model.ProductId);
                 await _repository.ReplaceOneAsync(_mapper.Map(model, id));
-                response.success = true;
-                response.message = Constants.StatusMessage.UpdateSuccessfully;
             }
-            catch (Exception ex)
-            {
-                response.message = ex.Message;
-            }
-            return response;
         }
 
-        public async Task<Response<Products>> Delete(int id)
-        {
-            var response = new Response<Products>();
-            try
-            {
-                await _repository.DeleteOneAsync(x => x.ProductId == id);
-                response.success = true;
-                response.message = Constants.StatusMessage.DeleteSuccessfully;
-            }
-            catch (Exception ex)
-            {
-                response.message = ex.Message;
-            }
-            return response;
-        }
+        public async Task Delete(int id) => await _repository.DeleteOneAsync(x => x.ProductId == id);
     }
 }
