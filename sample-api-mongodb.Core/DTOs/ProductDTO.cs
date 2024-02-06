@@ -13,6 +13,7 @@
         public string Brand { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public string Thumbnail { get; set; } = string.Empty;
-        public List<string>? images { get; set; }
+        public List<string>? Images { get; set; }
+        public bool Active { get; set; } 
     }
 }

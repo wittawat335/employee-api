@@ -6,7 +6,7 @@ using sample_api_mongodb.Api.Responses;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController(IProductService _service) : ControllerBase

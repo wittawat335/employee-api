@@ -28,6 +28,8 @@ namespace sample_api_mongodb.Core.Entities
         [BsonElement("thumbnail")]
         public string Thumbnail { get; set; } = string.Empty;
         [BsonElement("images")]
-        public List<string>? images { get; set; } 
+        public List<string>? images { get; set; }
+        [BsonElement("active")]
+        public bool Active { get; set; } 
     }
 }
