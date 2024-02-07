@@ -11,10 +11,7 @@ namespace sample_api_mongodb.Core.AutoMapper
             //CreateMap<Products, ProductDTO>();
             CreateMap<ProductDTO, Products>().ReverseMap();
             CreateMap<UserDTO, Users>();
-            CreateMap<Users, UserDTO>().ForMember(x =>
-               x.active,
-               opt => opt.MapFrom(origin => origin.Active == true ? "Active" : "InActive")
-               );
+            CreateMap<Users, UserDTO>();
             CreateMap<ApplicationUser, Users>()
                 .ForMember(x => x.Id, opt => opt.MapFrom(origin => origin.Id.ToString()));
 

@@ -6,7 +6,7 @@ using sample_api_mongodb.Api.Responses;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController(IProductService _service) : ControllerBase
@@ -40,8 +40,10 @@ namespace sample_api_mongodb.Api.Controllers
             return Ok();
         }
 
+
+        [Authorize(Roles = "Developer")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             await _service.Delete(id);
             return Ok();

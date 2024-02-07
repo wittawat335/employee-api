@@ -10,6 +10,6 @@ namespace sample_api_mongodb.Core.DTOs
         public string email { get; set; } = string.Empty;
         public string roles { get; set; } = string.Empty;
         //public List<string>? roles { get; set; } 
-        public string active { get; set; } = string.Empty;
+        public bool active { get; set; } 
     }
 }

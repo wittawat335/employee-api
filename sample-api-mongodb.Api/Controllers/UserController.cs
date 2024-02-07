@@ -5,7 +5,7 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController(IUserService _service) : ControllerBase
@@ -20,8 +20,7 @@ namespace sample_api_mongodb.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(RegisterRequest model)
         {
-            await _service.Insert(model);
-            return Ok();
+            await _service.Insert(model); return Ok();
         }
 
         [HttpPut]

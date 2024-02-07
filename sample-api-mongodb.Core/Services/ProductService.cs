@@ -54,6 +54,6 @@ namespace sample_api_mongodb.Core.Services
             }
         }
 
-        public async Task Delete(int id) => await _repository.DeleteOneAsync(x => x.ProductId == id);
+        public async Task Delete(string id) => await _repository.DeleteByIdAsync(id);
     }
 }

@@ -8,6 +8,6 @@ namespace sample_api_mongodb.Core.Interfaces.Services
         Task<ProductDTO> Get(int id);
         Task Insert(ProductDTO model);
         Task Update(ProductDTO model);
-        Task Delete(int id);
+        Task Delete(string id);
     }
 }
