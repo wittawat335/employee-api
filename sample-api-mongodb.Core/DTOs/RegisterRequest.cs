@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace sample_api_mongodb.Core.DTOs
 {
@@ -18,5 +13,6 @@ namespace sample_api_mongodb.Core.DTOs
         public List<string>? Roles { get; set; } 
         [Required, DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
+        public string Active { get; set; } = string.Empty;
     }
 }

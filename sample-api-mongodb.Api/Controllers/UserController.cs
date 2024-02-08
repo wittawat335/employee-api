@@ -5,7 +5,7 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController(IUserService _service) : ControllerBase
@@ -15,6 +15,13 @@ namespace sample_api_mongodb.Api.Controllers
         {
             var response = await _service.GetAll();
             return response.Count() > 0 ? Ok(response) : NotFound();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var response = await _service.Get(id);
+            return response != null ? Ok(response) : NotFound();
         }
 
         [HttpPost]

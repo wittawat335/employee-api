@@ -19,7 +19,7 @@ namespace sample_api_mongodb.Core.Services
 
         public async Task<List<UserDTO>> GetAll()
         {
-            var result = new List<UserDTO>();
+            List<UserDTO> result = new();
             var listUsermanager = _userManager.Users.ToList();
             if (listUsermanager.Count > 0)
             {
@@ -28,7 +28,8 @@ namespace sample_api_mongodb.Core.Services
                 {
                     var user = new Users();
                     _mapper.Map(item, user);
-                    user.Roles = string.Join(",", _userManager.GetRolesAsync(item).Result.ToArray());
+                    user.Roles = string.Join(",",
+                        _userManager.GetRolesAsync(item).Result.ToArray());
                     listUser.Add(user);
                 }
                 if (listUser.Count() > 0)
@@ -48,8 +49,10 @@ namespace sample_api_mongodb.Core.Services
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username,
                 EmailConfirmed = true,
+                Active = model.Active == "1" ? true : false
             };
-            var createUserResult = await _userManager.CreateAsync(user, model.Password);
+            var createUserResult =
+                await _userManager.CreateAsync(user, model.Password);
             if (createUserResult.Succeeded)
             {
                 await _userManager.AddToRolesAsync(user, model.Roles!);
@@ -66,7 +69,9 @@ namespace sample_api_mongodb.Core.Services
                 if (result.Succeeded)
                 {
                     var getRoles = await _userManager.GetRolesAsync(user);
-                    var removeroles = await _userManager.RemoveFromRolesAsync(user, getRoles.ToArray());
+                    var removeroles =
+                        await _userManager.RemoveFromRolesAsync
+                        (user, getRoles.ToArray());
                     var roles = model.roles.Split(',').ToList();
                     if (removeroles.Succeeded)
                     {
@@ -85,7 +90,9 @@ namespace sample_api_mongodb.Core.Services
                 var rolesForUser = await _userManager.GetRolesAsync(user);
                 foreach (var login in logins.ToList())
                 {
-                    await _userManager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
+                    await _userManager
+                        .RemoveLoginAsync
+                        (user, login.LoginProvider, login.ProviderKey);
                 }
 
                 if (rolesForUser.Count() > 0)
@@ -98,6 +105,22 @@ namespace sample_api_mongodb.Core.Services
 
                 await _userManager.DeleteAsync(user);
             }
+        }
+
+        public async Task<UserDTO> Get(string id)
+        {
+            UserDTO result = new();
+            var query = await _userManager.FindByIdAsync(id);
+            if (query != null)
+            {
+                Users users = new();
+                var mapping = _mapper.Map(query, users);
+                users.Roles = string
+                    .Join(",", _userManager.GetRolesAsync(query).Result.ToArray());
+                result = _mapper.Map<UserDTO>(mapping);   
+            }
+
+            return result;
         }
     }
 }

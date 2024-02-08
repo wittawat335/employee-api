@@ -3,7 +3,6 @@ using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
-using System.Collections.Generic;
 
 namespace sample_api_mongodb.Core.Services
 {
@@ -12,7 +11,8 @@ namespace sample_api_mongodb.Core.Services
         private readonly IGenericRepository<Products> _repository;
         private readonly IMapper _mapper;
 
-        public ProductService(IGenericRepository<Products> repository, IMapper mapper)
+        public ProductService(
+            IGenericRepository<Products> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -37,7 +37,9 @@ namespace sample_api_mongodb.Core.Services
 
         public async Task Insert(ProductDTO model)
         {
-            var id = _repository.AsQueryable().OrderByDescending(x => x.ProductId).Select(b => b.ProductId).First();
+            var id = _repository.AsQueryable()
+                .OrderByDescending(x => x.ProductId).Select(b => b.ProductId)
+                .First();
             if (id >= 0)
             {
                 model.ProductId = id + 1;
@@ -47,7 +49,8 @@ namespace sample_api_mongodb.Core.Services
 
         public async Task Update(ProductDTO model)
         {
-            var id = await _repository.FindOneAsync(x => x.ProductId == model.ProductId);
+            var id = await _repository
+                .FindOneAsync(x => x.ProductId == model.ProductId);
             if(id != null)
             {
                 await _repository.ReplaceOneAsync(_mapper.Map(model, id));

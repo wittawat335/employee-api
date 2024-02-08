@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Interfaces.Services;
-using System.Net;
 
 namespace sample_api_mongodb.Api.Controllers
 {
