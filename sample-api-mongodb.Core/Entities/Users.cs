@@ -14,8 +14,10 @@ namespace sample_api_mongodb.Core.Entities
         public string UserName { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string? Roles { get; set; }
-        //public IList<string>? Roles { get; set; }
+        public string Password { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        //public string? Roles { get; set; }
+        public IList<string>? Roles { get; set; }
         public IList<string>? Logins { get; set; }
         public IList<string>? Tokens { get; set; }
         public IList<string>? Claims { get; set; }

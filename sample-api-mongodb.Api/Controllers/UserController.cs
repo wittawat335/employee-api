@@ -5,7 +5,7 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-    //[Authorize]
+   // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController(IUserService _service) : ControllerBase

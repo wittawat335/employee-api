@@ -25,16 +25,21 @@ namespace sample_api_mongodb.Core
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IRoleService, RoleService>();
         }
-        public static void InjectJWTConfig(this IServiceCollection services, IConfiguration configuration)
+        public static void InjectJWTConfig(
+            this IServiceCollection services, IConfiguration configuration)
         {
-            BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
-            BsonSerializer.RegisterSerializer(new DateTimeSerializer(MongoDB.Bson.BsonType.String));
-            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
+            BsonSerializer.RegisterSerializer(
+                new GuidSerializer(MongoDB.Bson.BsonType.String));
+            BsonSerializer.RegisterSerializer(
+                new DateTimeSerializer(MongoDB.Bson.BsonType.String));
+            BsonSerializer.RegisterSerializer(
+                new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
 
             //add mongoIdentityConfiguration...
             var mongoDbIdentityConfig = new MongoDbIdentityConfiguration
             {
-                MongoDbSettings = configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>(),
+                MongoDbSettings = configuration
+                .GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>(),
                 IdentityOptionsAction = options =>
                 {
                     options.Password.RequireDigit = false;
@@ -43,13 +48,15 @@ namespace sample_api_mongodb.Core
                     options.Password.RequireLowercase = false;
 
                     //lockout
-                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                    options
+                    .Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
                     options.Lockout.MaxFailedAccessAttempts = 5;
                     options.User.RequireUniqueEmail = true;
                 }
             };
 
-            services.ConfigureMongoDbIdentity<ApplicationUser, ApplicationRole, Guid>(mongoDbIdentityConfig)
+            services.ConfigureMongoDbIdentity<
+                ApplicationUser, ApplicationRole, Guid>(mongoDbIdentityConfig)
                 .AddUserManager<UserManager<ApplicationUser>>()
                 .AddSignInManager<SignInManager<ApplicationUser>>()
                 .AddRoleManager<RoleManager<ApplicationRole>>()

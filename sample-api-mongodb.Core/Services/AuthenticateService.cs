@@ -17,7 +17,8 @@ namespace sample_api_mongodb.Core.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticateService(UserManager<ApplicationUser> userManager,IConfiguration configuration)
+        public AuthenticateService(
+            UserManager<ApplicationUser> userManager,IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -40,9 +41,12 @@ namespace sample_api_mongodb.Core.Services
                 var roleClaims = roles.Select(x => new Claim("roles", x));
                 claims.AddRange(roleClaims);
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:JWT:key"]!));
-                var expires = DateTime.Now.AddMinutes(Int16.Parse(_configuration["AppSettings:JWT:Expires"]!));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var key = new SymmetricSecurityKey
+                    (Encoding.UTF8.GetBytes(_configuration["AppSettings:JWT:key"]!));
+                var expires = DateTime.Now
+                    .AddMinutes(Int16.Parse(_configuration["AppSettings:JWT:Expires"]!));
+                var creds = 
+                    new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
                     issuer: _configuration["AppSettings:JWT:Issuer"],
@@ -73,7 +77,9 @@ namespace sample_api_mongodb.Core.Services
             try
             {
                 var user = await _userManager.FindByEmailAsync(request.Email);
-                var verifyResult = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash!, request.Password);
+                var verifyResult = _userManager
+                    .PasswordHasher
+                    .VerifyHashedPassword(user, user.PasswordHash!, request.Password);
                 if (verifyResult == PasswordVerificationResult.Success)
                 {
                     response = await CreateToken(user);
@@ -112,14 +118,16 @@ namespace sample_api_mongodb.Core.Services
                         UserName = request.Username,
                         EmailConfirmed = true,
                     };
-                    var createUserResult = await _userManager.CreateAsync(user, request.Password);
+                    var createUserResult = 
+                        await _userManager.CreateAsync(user, request.Password);
                     if (!createUserResult.Succeeded)
                     {
                         response.Message = $"Create user failed {createUserResult?.Errors?.First()?.Description}";
                     }
                     else
                     {
-                        var addUserToRoleResult = await _userManager.AddToRoleAsync(user, "User");
+                        var addUserToRoleResult = 
+                            await _userManager.AddToRoleAsync(user, "User");
                         if (!addUserToRoleResult.Succeeded)
                         {
                             response.Message = $"Create user succeeded but could not add user to role {addUserToRoleResult?.Errors?.First()?.Description}";

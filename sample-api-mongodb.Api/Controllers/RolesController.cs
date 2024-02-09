@@ -15,9 +15,8 @@ namespace sample_api_mongodb.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var response = new Response<List<Roles>>();
-            response.payload = await _service.GetAll();
-            return response.payload.Count() > 0 ? Ok(response.payload) : NotFound();
+            var response = await _service.GetAll();
+            return response.Count() > 0 ? Ok(response) : NotFound();
         }
 
         [HttpGet]
@@ -26,7 +25,8 @@ namespace sample_api_mongodb.Api.Controllers
         {
             var response = new Response<List<Roles>>();
             response.payload = await _service.GetAll();
-            return response.payload.Count() > 0 ? Ok(response.payload.Select(x => x.Name)) : NotFound();
+            return response.payload.Count() > 0 ? 
+                Ok(response.payload.Select(x => x.Name)) : NotFound();
         }
 
         [HttpPost]

@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DTOs\User\" />
     <Folder Include="Enumerations\" />
     <Folder Include="QueryFilters\" />
   </ItemGroup>
