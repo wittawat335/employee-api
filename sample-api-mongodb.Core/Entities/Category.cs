@@ -4,7 +4,7 @@ using sample_api_mongodb.Core.DBSettings.Documents;
 
 namespace sample_api_mongodb.Core.Entities
 {
-    [BsonCollection("categorys")]
+    [BsonCollection("category")]
     public class Category : Document
     {
         [BsonElement("id")]

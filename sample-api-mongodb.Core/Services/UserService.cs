@@ -17,29 +17,6 @@ namespace sample_api_mongodb.Core.Services
             _mapper = mapper;
         }
 
-        //public async Task<List<UserDTO>> GetAll()
-        //{
-        //    List<UserDTO> result = new();
-        //    var listUsermanager = _userManager.Users.ToList();
-        //    if (listUsermanager.Count > 0)
-        //    {
-        //        var listUser = new List<Users>();
-        //        foreach (var item in listUsermanager)
-        //        {
-        //            var user = new Users();
-        //            _mapper.Map(item, user);
-        //            user.Roles = string.Join(",",
-        //                _userManager.GetRolesAsync(item).Result.ToArray());
-        //            listUser.Add(user);
-        //        }
-        //        if (listUser.Count() > 0)
-        //        {
-        //            result = _mapper.Map<List<UserDTO>>(listUser);
-        //        }
-        //    }
-        //    return result;
-        //}
-
         public async Task<List<UserDTO>> GetAll()
         {
             List<UserDTO> result = new();
@@ -89,8 +66,7 @@ namespace sample_api_mongodb.Core.Services
                 user.UserName = model.username; user.Email = model.email;
                 user.FullName = model.fullname; user.PhoneNumber = model.phonenumber;
                 user.Active = model.active == "1" ? true : false;
-                //var update = _mapper.Map(model, user);
-                //update.PasswordHash = user.PasswordHash;
+           
                 var result = await _userManager.UpdateAsync(user!);
                 if (result.Succeeded)
                 {
@@ -117,7 +93,8 @@ namespace sample_api_mongodb.Core.Services
                 {
                     await
                         _userManager
-                        .RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
+                        .RemoveLoginAsync(
+                            user, login.LoginProvider, login.ProviderKey);
                 }
 
                 if (rolesForUser.Count() > 0)
@@ -140,9 +117,8 @@ namespace sample_api_mongodb.Core.Services
             {
                 Users users = new();
                 var mapping = _mapper.Map(query, users);
-                //users.Roles = string
-                //    .Join(",", _userManager.GetRolesAsync(query).Result.ToArray());
-                result = _mapper.Map<UserDTO>(mapping);
+                if (mapping != null)
+                    result = _mapper.Map<UserDTO>(mapping);
             }
 
             return result;

@@ -14,9 +14,8 @@ namespace sample_api_mongodb.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var response = new Response<List<ProductDTO>>();
-            response.payload = await _service.GetAll();
-            return response.payload.Count() > 0 ? Ok(response) : NotFound();
+            var response = await _service.GetAll();
+            return response.Count() > 0 ? Ok(response) : NotFound();
         }
 
         [HttpGet("{id}")]

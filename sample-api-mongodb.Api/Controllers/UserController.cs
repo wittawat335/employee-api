@@ -5,7 +5,7 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-   // [Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController(IUserService _service) : ControllerBase
@@ -33,16 +33,14 @@ namespace sample_api_mongodb.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(UserDTO model)
         {
-            await _service.Update(model);
-            return Ok();
+            await _service.Update(model); return Ok();
         }
 
         [Authorize(Roles = "Developer, Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _service.Delete(id);
-            return Ok();
+            await _service.Delete(id); return Ok();
         }
     }
 }

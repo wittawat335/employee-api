@@ -8,8 +8,11 @@ namespace sample_api_mongodb.Core.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<ProductDTO, Products>().ReverseMap();
-
+            CreateMap<ProductDTO, Products>();
+            
+            CreateMap<Products, ProductDTO>()
+                .ForMember(x => x.Active, 
+                opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
 
 
 
@@ -20,14 +23,12 @@ namespace sample_api_mongodb.Core.AutoMapper
 
 
             CreateMap<Users, UserDTO>()
-                .ForMember(x => x.active, opt => opt
-              .MapFrom(origin => origin.Active == true ? "1" : "0")
-              );
+                    .ForMember(x => x.active, 
+                    opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
 
             CreateMap<ApplicationUser, UserDTO>()
-              .ForMember(x => x.active, opt => opt
-            .MapFrom(origin => origin.Active == true ? "1" : "0")
-            );
+              .ForMember(x => x.active, 
+              opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
 
             CreateMap<ApplicationUser, Users>()
                 .ForMember(x => x.Id,

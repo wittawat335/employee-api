@@ -49,11 +49,10 @@ namespace sample_api_mongodb.Core.Services
 
         public async Task Update(ProductDTO model)
         {
-            var id = await _repository
-                .FindOneAsync(x => x.ProductId == model.ProductId);
-            if(id != null)
+            var query = await _repository.FindByIdAsync(model.Id!);
+            if(query != null)
             {
-                await _repository.ReplaceOneAsync(_mapper.Map(model, id));
+                await _repository.ReplaceOneAsync(_mapper.Map(model, query));
             }
         }
 

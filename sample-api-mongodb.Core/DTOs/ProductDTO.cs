@@ -14,6 +14,6 @@
         public string Category { get; set; } = string.Empty;
         public string Thumbnail { get; set; } = string.Empty;
         public List<string>? Images { get; set; }
-        public bool Active { get; set; } 
+        public string Active { get; set; } = string.Empty;
     }
 }
