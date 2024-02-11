@@ -32,6 +32,7 @@ namespace sample_api_mongodb.Core.Services
             {
                 products = _mapper.Map<List<ProductDTO>>(query);
             }
+
             return products;
         }
 

@@ -7,5 +7,6 @@ namespace sample_api_mongodb.Api.Controllers
     [ApiController]
     public class CatogoryController : ControllerBase
     {
+       
     }
 }

@@ -13,18 +13,22 @@ namespace sample_api_mongodb.Infrastructure.Repositories
 
         public GenericRepository(IDbSettings settings)
         {
-            var database = new MongoClient(settings.ConnectionString).GetDatabase(settings.DatabaseName);
-            _collection = database.GetCollection<TDocument>(GetCollectionName(typeof(TDocument)));
+            var database = new MongoClient
+                (settings.ConnectionString).GetDatabase(settings.DatabaseName);
+            _collection = database
+                .GetCollection<TDocument>(GetCollectionName(typeof(TDocument)));
         }
 
         private protected string? GetCollectionName(Type documentType)
         {
-            return ((BsonCollectionAttribute)documentType.GetCustomAttributes(typeof(BsonCollectionAttribute), true).FirstOrDefault())?.CollectionName;
+            return ((BsonCollectionAttribute)documentType
+                .GetCustomAttributes(typeof(BsonCollectionAttribute), true).FirstOrDefault())?.CollectionName;
         }
 
         public IQueryable<TDocument> AsQueryable() =>  _collection.AsQueryable();
 
-        public async Task<List<TDocument>> GetAll() => await _collection.Find(Builders<TDocument>.Filter.Empty).ToListAsync();
+        public async Task<List<TDocument>> GetAll() 
+            => await _collection.Find(Builders<TDocument>.Filter.Empty).ToListAsync();
 
         public List<TDocument> FilterBy(Expression<Func<TDocument, bool>> filterExpression)
         {
@@ -32,9 +36,11 @@ namespace sample_api_mongodb.Infrastructure.Repositories
         }
 
         public List<TProjected> FilterBy<TProjected>(
-          Expression<Func<TDocument, bool>> filterExpression, Expression<Func<TDocument, TProjected>> projectionExpression)
+          Expression<Func<TDocument, bool>> filterExpression, 
+          Expression<Func<TDocument, TProjected>> projectionExpression)
         {
-            return _collection.Find(filterExpression).Project(projectionExpression).ToList();
+            return _collection
+                .Find(filterExpression).Project(projectionExpression).ToList();
         }
 
         public TDocument FindById(string id)
@@ -59,7 +65,8 @@ namespace sample_api_mongodb.Infrastructure.Repositories
             return _collection.Find(filterExpression).FirstOrDefault();
         }
 
-        public Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression)
+        public Task<TDocument> FindOneAsync(
+            Expression<Func<TDocument, bool>> filterExpression)
         {
             return Task.Run(() => _collection.Find(filterExpression).FirstOrDefaultAsync());
         }

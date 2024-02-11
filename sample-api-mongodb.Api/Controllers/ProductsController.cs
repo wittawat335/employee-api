@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Interfaces.Services;
-using sample_api_mongodb.Api.Responses;
 
 namespace sample_api_mongodb.Api.Controllers
 {
@@ -21,31 +20,26 @@ namespace sample_api_mongodb.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var response = await _service.Get(id);
-            return Ok();
+            var response = await _service.Get(id); return Ok(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> Insert(ProductDTO model)
         {
-            await _service.Insert(model);
-            return Ok();
+            await _service.Insert(model); return Ok();
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(ProductDTO model)
         {
-            await _service.Update(model);
-            return Ok();
+            await _service.Update(model); return Ok();
         }
-
 
         [Authorize(Roles = "Developer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _service.Delete(id);
-            return Ok();
+            await _service.Delete(id); return Ok();
         }
     }
 }

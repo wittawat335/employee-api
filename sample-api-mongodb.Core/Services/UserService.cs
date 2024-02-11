@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
+using sample_api_mongodb.Core.Exceptions;
 using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Core.Services
@@ -36,6 +37,7 @@ namespace sample_api_mongodb.Core.Services
                     result = _mapper.Map<List<UserDTO>>(listUser);
                 }
             }
+
             return result;
         }
 
@@ -50,11 +52,16 @@ namespace sample_api_mongodb.Core.Services
                 EmailConfirmed = true,
                 Active = model.Active == "1" ? true : false
             };
-            var createUserResult =
+            var created =
                 await _userManager.CreateAsync(user, model.Password);
-            if (createUserResult.Succeeded)
+            if (created.Succeeded)
             {
                 await _userManager.AddToRolesAsync(user, model.Roles!);
+            }
+            else
+            {
+                throw new BadRequestException
+                    ($"Create user failed {created?.Errors?.First()?.Description}");
             }
         }
 
@@ -66,9 +73,9 @@ namespace sample_api_mongodb.Core.Services
                 user.UserName = model.username; user.Email = model.email;
                 user.FullName = model.fullname; user.PhoneNumber = model.phonenumber;
                 user.Active = model.active == "1" ? true : false;
-           
-                var result = await _userManager.UpdateAsync(user!);
-                if (result.Succeeded)
+
+                var updated = await _userManager.UpdateAsync(user!);
+                if (updated.Succeeded)
                 {
                     var getRoles = await _userManager.GetRolesAsync(user);
                     var removeroles =
@@ -78,6 +85,11 @@ namespace sample_api_mongodb.Core.Services
                     {
                         await _userManager.AddToRolesAsync(user, model.roles!);
                     }
+                }
+                else
+                {
+                    throw new BadRequestException
+                        ($"Update user failed {updated?.Errors?.First()?.Description}");
                 }
             }
         }

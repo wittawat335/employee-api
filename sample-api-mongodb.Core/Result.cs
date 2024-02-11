@@ -1,11 +1,9 @@
-﻿namespace sample_api_mongodb.Api.Responses
+﻿
+namespace sample_api_mongodb.Core
 {
-    public class Response<T>
+    public class Result
     {
-        public T payload { get; set; }
         public string message { get; set; } = string.Empty;
         public bool isSuccess { get; set; } = false;
     }
-
-  
 }

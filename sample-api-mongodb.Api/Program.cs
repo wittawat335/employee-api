@@ -3,6 +3,7 @@ using sample_api_mongodb.Core;
 using sample_api_mongodb.Core.Commons;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using sample_api_mongodb.Core.Extensions;
 using sample_api_mongodb.Core.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+//builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddTransient<ExceptionMiddleware>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -34,12 +38,9 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-builder.Services.AddExceptionHandler<GeneralExceptionHandler>();
-builder.Services.AddExceptionHandler<AppExceptionHandler>();
-
 var app = builder.Build();
-app.UseExceptionHandler(_ => { });
 
+//app.UseExceptionHandler(opt => {  });
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -50,5 +51,6 @@ app.UseCors(cors!);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.CongigureExceptionMiddleware();
 app.MapControllers();
 app.Run();
