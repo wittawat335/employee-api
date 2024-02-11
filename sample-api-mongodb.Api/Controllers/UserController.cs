@@ -14,7 +14,6 @@ namespace sample_api_mongodb.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var response = await _service.GetAll();
-
             return response.Count() > 0 ? Ok(response) : NotFound();
         }
 
@@ -28,7 +27,7 @@ namespace sample_api_mongodb.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(RegisterRequest model)
         {
-            await _service.Insert(model); return Problem();
+            await _service.Insert(model); return Ok();
         }
 
         [HttpPut]

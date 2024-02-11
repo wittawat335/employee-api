@@ -59,7 +59,7 @@ namespace sample_api_mongodb.Core.Exceptions
 
     public static class ExceptionMiddlewareExtension
     {
-        public static void CongigureExceptionMiddleware(this IApplicationBuilder app)
+        public static void ConfigureExceptionMiddleware(this IApplicationBuilder app)
         {
             app.UseMiddleware<ExceptionMiddleware>();
         }
