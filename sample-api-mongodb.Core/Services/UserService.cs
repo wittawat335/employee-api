@@ -43,25 +43,33 @@ namespace sample_api_mongodb.Core.Services
 
         public async Task Insert(RegisterRequest model)
         {
-            var user = new ApplicationUser
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
             {
-                FullName = model.Fullname,
-                Email = model.Email,
-                ConcurrencyStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username,
-                EmailConfirmed = true,
-                Active = model.Active == "1" ? true : false
-            };
-            var created =
-                await _userManager.CreateAsync(user, model.Password);
-            if (created.Succeeded)
-            {
-                await _userManager.AddToRolesAsync(user, model.Roles!);
+                user = new ApplicationUser
+                {
+                    FullName = model.Fullname,
+                    Email = model.Email,
+                    ConcurrencyStamp = Guid.NewGuid().ToString(),
+                    UserName = model.Username,
+                    EmailConfirmed = true,
+                    Active = model.Active == "1" ? true : false
+                };
+                var created =
+                    await _userManager.CreateAsync(user, model.Password);
+                if (created.Succeeded)
+                {
+                    await _userManager.AddToRolesAsync(user, model.Roles!);
+                }
+                else
+                {
+                    throw new BadRequestException
+                        ($"Create user failed {created?.Errors?.First()?.Description}");
+                }
             }
             else
             {
-                throw new BadRequestException
-                    ($"Create user failed {created?.Errors?.First()?.Description}");
+                throw new BadRequestException($"Email : {model.Email}is Duplicate ");
             }
         }
 
@@ -92,6 +100,10 @@ namespace sample_api_mongodb.Core.Services
                         ($"Update user failed {updated?.Errors?.First()?.Description}");
                 }
             }
+            else
+            {
+                throw new BadRequestException($"Not found user id : {model.id}");
+            }
         }
 
         public async Task Delete(string id)
@@ -103,10 +115,8 @@ namespace sample_api_mongodb.Core.Services
                 var rolesForUser = await _userManager.GetRolesAsync(user);
                 foreach (var login in logins.ToList())
                 {
-                    await
-                        _userManager
-                        .RemoveLoginAsync(
-                            user, login.LoginProvider, login.ProviderKey);
+                    await _userManager
+                          .RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
                 }
 
                 if (rolesForUser.Count() > 0)
@@ -119,6 +129,10 @@ namespace sample_api_mongodb.Core.Services
 
                 await _userManager.DeleteAsync(user);
             }
+            else
+            {
+                throw new BadRequestException($"Not found user id : {id}");
+            }
         }
 
         public async Task<UserDTO> Get(string id)
@@ -129,8 +143,7 @@ namespace sample_api_mongodb.Core.Services
             {
                 Users users = new();
                 var mapping = _mapper.Map(query, users);
-                if (mapping != null)
-                    result = _mapper.Map<UserDTO>(mapping);
+                if (mapping != null) result = _mapper.Map<UserDTO>(mapping);
             }
 
             return result;

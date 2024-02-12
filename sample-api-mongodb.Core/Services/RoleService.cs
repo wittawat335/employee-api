@@ -11,7 +11,9 @@ namespace sample_api_mongodb.Core.Services
         private readonly IRoleRepository _repository;
         private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public RoleService(IRoleRepository repository, RoleManager<ApplicationRole> roleManager)
+        public RoleService(
+            IRoleRepository repository, 
+            RoleManager<ApplicationRole> roleManager)
         {
             _repository = repository;
             _roleManager = roleManager;
@@ -25,11 +27,7 @@ namespace sample_api_mongodb.Core.Services
 
         public async Task CreateRole(CreateRoleRequest request)
         {
-            var role = new ApplicationRole 
-            { 
-                Name = request.RoleName,
-                Active = request.Active 
-            };
+            var role = new ApplicationRole { Name = request.RoleName, Active = request.Active };
             await _roleManager.CreateAsync(role);
         }
     }
