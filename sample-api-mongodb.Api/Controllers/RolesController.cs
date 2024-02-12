@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using sample_api_mongodb.Api.Responses;
 using sample_api_mongodb.Core.DTOs;
-using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Api.Controllers
