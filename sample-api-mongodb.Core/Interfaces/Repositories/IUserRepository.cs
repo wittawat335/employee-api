@@ -13,3 +13,4 @@ namespace sample_api_mongodb.Core.Interfaces.Repositories
         IQueryable<Users> AsQueryable();
     }
 }
+

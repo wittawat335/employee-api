@@ -14,12 +14,7 @@ namespace sample_api_mongodb.Core.AutoMapper
                 .ForMember(x => x.Active, 
                 opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
 
-
-
-
             CreateMap<UserDTO, Users>();
-
-
 
 
             CreateMap<Users, UserDTO>()
@@ -33,11 +28,6 @@ namespace sample_api_mongodb.Core.AutoMapper
             CreateMap<ApplicationUser, Users>()
                 .ForMember(x => x.Id,
                 opt => opt.MapFrom(origin => origin.Id.ToString()));
-
-
-
-
-
 
 
             CreateMap<UserDTO, ApplicationUser>()

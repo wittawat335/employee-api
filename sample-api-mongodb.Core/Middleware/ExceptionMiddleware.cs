@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using sample_api_mongodb.Core.Exceptions;
 
-namespace sample_api_mongodb.Core.Exceptions
+namespace sample_api_mongodb.Core.Middleware
 {
     public class ExceptionMiddleware : IMiddleware
     {
@@ -18,11 +19,12 @@ namespace sample_api_mongodb.Core.Exceptions
             try
             {
                 await next(context);
+                _logger.LogInformation("Success");
             }
             catch (Exception ex)
             {
 
-                _logger.LogError($"Something went wrong");
+                _logger.LogError(ex, $"This Error come From exception Middleware {ex.Message} !");
                 await HandleException(context, ex);
             }
         }
@@ -41,8 +43,8 @@ namespace sample_api_mongodb.Core.Exceptions
                 case DivideByZeroException _:
                     statusCode = StatusCodes.Status400BadRequest;
                     break;
-               
-                    // you can define some more exceptions, according to need
+
+            // you can define some more exceptions, according to need
             }
             var errorResponse = new ErrorDetails
             {
