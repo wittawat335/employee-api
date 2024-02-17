@@ -7,6 +7,7 @@ using sample_api_mongodb.Core.Commons;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Exceptions;
+using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -21,7 +22,8 @@ namespace sample_api_mongodb.Core.Services
         private readonly IConfiguration _configuration;
 
         public AuthenticateService(
-            UserManager<ApplicationUser> userManager, IConfiguration configuration)
+            UserManager<ApplicationUser> userManager, 
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _configuration = configuration;
@@ -41,16 +43,18 @@ namespace sample_api_mongodb.Core.Services
             var roleClaims = roles.Select(x => new Claim("roles", x));
             claims.AddRange(roleClaims);
 
-            var key = new SymmetricSecurityKey
-                (Encoding.UTF8.GetBytes(_configuration["AppSettings:JWT:key"]!));
+            var key 
+                = new SymmetricSecurityKey
+                (Encoding.UTF8.GetBytes(_configuration[Constants.JWT.Key]!));
+
             var expires = DateTime.Now
-                .AddMinutes(Int16.Parse(_configuration["AppSettings:JWT:Expires"]!));
-            var creds =
-                new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                .AddMinutes(Int16.Parse(_configuration[Constants.JWT.TokenExpiresInMinute]!));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["AppSettings:JWT:Issuer"],
-                audience: _configuration["AppSettings:JWT:Audience"],
+                issuer: _configuration[Constants.JWT.Issuer],
+                audience: _configuration[Constants.JWT.Audience],
                 claims: claims,
                 expires: expires,
                 signingCredentials: creds
@@ -58,14 +62,21 @@ namespace sample_api_mongodb.Core.Services
 
             var response = new LoginResponse();
             response.token = new JwtSecurityTokenHandler().WriteToken(token);
-            response.refreshToken = RefreshToken();
+            response.refreshToken = GenerateRefreshToken();
             response.userId = user.Id.ToString();
             response.roles = new List<string>(roles);
             response.email = user.Email!;
             response.username = user.UserName!;
             response.fullname = user.FullName;
-            response.message = "Login Successfully";
+            response.message = Constants.StatusMessage.LoginSuccess;
             response.success = true;
+
+            var RefreshTokenValidityInDays 
+                = Convert.ToInt64(_configuration[Constants.JWT.RefreshTokenValidityInDays]);
+            user.RefreshToken = response.refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(RefreshTokenValidityInDays);
+
+            await _userManager.UpdateAsync(user);
 
             return response;
         }
@@ -88,9 +99,10 @@ namespace sample_api_mongodb.Core.Services
             return response;
         }
 
-        public string RefreshToken() => 
-            Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        private static string GenerateRefreshToken()
+            => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 
+       
         public async Task<RegisterReaponse> RegisterAsync(RegisterRequest request)
         {
             var response = new RegisterReaponse();
@@ -132,6 +144,11 @@ namespace sample_api_mongodb.Core.Services
             }
 
             return response;
+        }
+
+        public Task<LoginResponse> GetRefreshToken(RefreshTokenDTO model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

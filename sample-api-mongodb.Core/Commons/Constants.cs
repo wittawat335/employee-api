@@ -14,10 +14,21 @@ namespace sample_api_mongodb.Core.Commons
             public const string CorsPolicy = "AppSettings:reactPolicy";
         }
 
+        public struct JWT
+        {
+            public const string Key = "AppSettings:JWT:key";
+            public const string Issuer = "AppSettings:JWT:Issuer";
+            public const string Audience = "AppSettings:JWT:Audience";
+            public const string TokenExpiresInMinute 
+                = "AppSettings:JWT:TokenExpiresInMinute";
+            public const string RefreshTokenValidityInDays 
+                = "AppSettings:JWT:RefreshTokenValidityInDays";
+        }
+
         public struct StatusMessage
         {
             public const string RegisterSuccess = "Registered successfully";
-            public const string LoginSuccess = "เข้าสู่ระบบสำเร็จ";
+            public const string LoginSuccess = "Login Successfully";
             public const string InvaildPassword = "รหัสผ่านไม่ถูกต้อง";
             public const string NotFoundUser = "ไม่มีบัญชีผู้ใช้นี้";
             public const string Success = "OK";
