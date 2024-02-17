@@ -7,7 +7,8 @@ namespace sample_api_mongodb.Core.Interfaces.Services
     {
         Task<LoginResponse> LoginAsync(LoginRequest request);
         Task<RegisterReaponse> RegisterAsync(RegisterRequest request);
-        Task<LoginResponse> CreateToken(ApplicationUser user);
         Task<LoginResponse> GetRefreshToken(RefreshTokenDTO model);
+        Task Revoke(string username);
+        Task RevokeAll();
     }
 }

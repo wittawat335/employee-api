@@ -12,6 +12,7 @@ using System.Text;
 using sample_api_mongodb.Core.Services;
 using sample_api_mongodb.Core.Interfaces.Services;
 using sample_api_mongodb.Core.AutoMapper;
+using sample_api_mongodb.Core.Commons;
 
 namespace sample_api_mongodb.Core
 {
@@ -77,10 +78,12 @@ namespace sample_api_mongodb.Core
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
-
-                    ValidIssuer = configuration["AppSettings:JWT:Issuer"],
-                    ValidAudience = configuration["AppSettings:JWT:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppSettings:JWT:Key"]!))
+                    ValidIssuer = configuration[Constants.JWT.Issuer],
+                    ValidAudience = configuration[Constants.JWT.Audience],
+                    IssuerSigningKey
+                    = new SymmetricSecurityKey(Encoding
+                    .UTF8
+                    .GetBytes(configuration[Constants.JWT.Key]!))
                 };
             });
         }

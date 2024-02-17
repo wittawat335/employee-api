@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Interfaces.Services;
 
@@ -8,16 +9,6 @@ namespace sample_api_mongodb.Api.Controllers
     [ApiController]
     public class AuthenticateController(IAuthenticateService _service) : ControllerBase
     {
-        //[HttpPost]
-        //[Route("refresh-token")]
-        //public async Task<IActionResult> RefreshToken()
-        //{
-
-        //    var response = await _service.LoginAsync(request);
-
-        //    return Ok(response);
-        //}
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -25,6 +16,7 @@ namespace sample_api_mongodb.Api.Controllers
             var response = await _service.LoginAsync(request);
             return Ok(response);
         }
+
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
@@ -32,6 +24,38 @@ namespace sample_api_mongodb.Api.Controllers
 
             var response = await _service.RegisterAsync(request);
             return response.Success ? Ok(response) : BadRequest(response.Message);
+        }
+
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenDTO model)
+        {
+
+            if (model is null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            var response = await _service.GetRefreshToken(model);
+            return response.success ? Ok(response) : BadRequest(response.message);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("revoke/{username}")]
+        public async Task<IActionResult> Revoke(string username)
+        {
+            await _service.Revoke(username);
+            return Ok("Success");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("revoke-all")]
+        public async Task<IActionResult> RevokeAll()
+        {
+            await _service.RevokeAll();
+            return Ok("Success");
         }
     }
 }

@@ -29,6 +29,7 @@ namespace sample_api_mongodb.Core.Commons
         {
             public const string RegisterSuccess = "Registered successfully";
             public const string LoginSuccess = "Login Successfully";
+            public const string RefreshTokenSuccess = "Refresh Token Successfully";
             public const string InvaildPassword = "รหัสผ่านไม่ถูกต้อง";
             public const string NotFoundUser = "ไม่มีบัญชีผู้ใช้นี้";
             public const string Success = "OK";
@@ -50,6 +51,7 @@ namespace sample_api_mongodb.Core.Commons
             public const string DeleteSuccessfully = "ลบขัอมูลเรียบร้อย";
             public const string MappingError = "Data can't mapping";
             public const string PasswordDecryptError = "Password can't decrypt";
+            public const string RefreshTokenInvalid = "Invalid access token or refresh token";
         }
       
         public struct Status

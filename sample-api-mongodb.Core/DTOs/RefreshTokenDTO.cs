@@ -8,7 +8,9 @@ namespace sample_api_mongodb.Core.DTOs
 {
     public class RefreshTokenDTO
     {
+        public bool Status { get; set; } = false;
+        public string StatusMessage { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
-        public Guid UserId { get; set; } 
+        public string RefreshToken { get; set; } = string.Empty;
     }
 }
