@@ -23,7 +23,7 @@ namespace sample_api_mongodb.Core
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IRoleService, RoleService>();
         }
         public static void InjectJWTConfig(

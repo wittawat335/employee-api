@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
+using System.Globalization;
 
 namespace sample_api_mongodb.Core.AutoMapper
 {
@@ -8,11 +9,7 @@ namespace sample_api_mongodb.Core.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<ProductDTO, Products>();
-            
-            CreateMap<Products, ProductDTO>()
-                .ForMember(x => x.Active, 
-                opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
+         
 
             CreateMap<UserDTO, Users>();
 
@@ -32,6 +29,26 @@ namespace sample_api_mongodb.Core.AutoMapper
 
             CreateMap<UserDTO, ApplicationUser>()
                .ForMember(x => x.Roles, opt => opt.Ignore());
+
+            CreateMap<Employee, EmployeeDTO>()
+                .ForMember(
+                _ => _.DateOfBirth,
+                opt => opt.MapFrom(
+                    origin => origin.DateOfBirth.ToString("yyyy-MM-dd")))
+                .ForMember(
+                _ => _.CreatedOn,
+                opt => opt.MapFrom(
+                    origin => origin.CreatedOn.ToString("yyyy-MM-dd")));
+
+            CreateMap<EmployeeDTO, Employee>()
+              .ForMember(
+              _ => _.CreatedOn,
+              opt => opt.MapFrom(
+                  origin => DateTime.Now))
+              .ForMember(
+              _ => _.DateOfBirth,
+              opt => opt.MapFrom(
+                  origin => DateTime.Now));
         }
     }
 }

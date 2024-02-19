@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using sample_api_mongodb.Core.DTOs;
+using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController(IProductService _service) : ControllerBase
+    public class EmployeeController(IEmployeeService _service) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -18,19 +18,20 @@ namespace sample_api_mongodb.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(string id)
         {
-            var response = await _service.Get(id); return Ok(response);
+            var response = await _service.GetById(id); 
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Insert(ProductDTO model)
+        public async Task<IActionResult> Insert(EmployeeDTO model)
         {
             await _service.Insert(model); return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(ProductDTO model)
+        public async Task<IActionResult> Update(EmployeeDTO model)
         {
             await _service.Update(model); return Ok();
         }

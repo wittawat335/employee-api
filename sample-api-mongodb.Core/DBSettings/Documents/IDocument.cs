@@ -14,6 +14,10 @@ namespace sample_api_mongodb.Core.DBSettings.Documents
         [BsonRepresentation(BsonType.ObjectId)]
         ObjectId Id { get; set; }
 
-        DateTime CreatedAt { get; }
+        DateTime CreatedOn { get; set; }
+        string CreatedBy { get; set; }
+
+        DateTime ModifiedOn { get; set; }
+        string ModifiedBy { get; set; }
     }
 }
