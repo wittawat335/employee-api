@@ -9,18 +9,14 @@ namespace sample_api_mongodb.Core.AutoMapper
     {
         public AutoMapperProfile()
         {
-         
-
             CreateMap<UserDTO, Users>();
-
-
             CreateMap<Users, UserDTO>()
-                    .ForMember(x => x.active, 
-                    opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
+                .ForMember(_ => _.active,
+                opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
 
             CreateMap<ApplicationUser, UserDTO>()
-              .ForMember(x => x.active, 
-              opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
+                .ForMember(_ => _.active,
+                opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
 
             CreateMap<ApplicationUser, Users>()
                 .ForMember(x => x.Id,
@@ -31,24 +27,12 @@ namespace sample_api_mongodb.Core.AutoMapper
                .ForMember(x => x.Roles, opt => opt.Ignore());
 
             CreateMap<Employee, EmployeeDTO>()
-                .ForMember(
-                _ => _.DateOfBirth,
-                opt => opt.MapFrom(
-                    origin => origin.DateOfBirth.ToString("yyyy-MM-dd")))
-                .ForMember(
-                _ => _.CreatedOn,
-                opt => opt.MapFrom(
-                    origin => origin.CreatedOn.ToString("yyyy-MM-dd")));
+                .ForMember(_ => _.Active,
+                opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
 
             CreateMap<EmployeeDTO, Employee>()
-              .ForMember(
-              _ => _.CreatedOn,
-              opt => opt.MapFrom(
-                  origin => DateTime.Now))
-              .ForMember(
-              _ => _.DateOfBirth,
-              opt => opt.MapFrom(
-                  origin => DateTime.Now));
+              .ForMember(_ => _.Active,
+                opt => opt.MapFrom(o => o.Active == "1" ? true : false));
         }
     }
 }

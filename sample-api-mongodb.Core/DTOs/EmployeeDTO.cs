@@ -13,8 +13,10 @@ namespace sample_api_mongodb.Core.DTOs
         public string? DateOfBirth { get; set; }
         public string Address { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;
-        public bool Active { get; set; }
+        public string? Active { get; set; }
         public string? CreatedBy { get; set; }
-        public string? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string? ModifiedBy { get; set; }
+        public DateTime? ModifiedOn { get; set; }
     }
 }
