@@ -10,6 +10,7 @@ namespace sample_api_mongodb.Core.DTOs
         public string FullName => $"{FirstName} {LastName}";
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string Gender { get; set;} = string.Empty;
         public string? DateOfBirth { get; set; }
         public string Address { get; set; } = string.Empty;
         public string Department { get; set; } = string.Empty;

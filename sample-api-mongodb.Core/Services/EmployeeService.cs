@@ -41,7 +41,8 @@ namespace sample_api_mongodb.Core.Services
                .First();
             }
             model.EmployeeId = id + 1;
-            await _repository.InsertOneAsync(_mapper.Map<Employee>(model));
+            var teswt = _mapper.Map<Employee>(model);
+            await _repository.InsertOneAsync(teswt);
         }
 
         public async Task Update(EmployeeDTO model)

@@ -27,11 +27,13 @@ namespace sample_api_mongodb.Core.AutoMapper
                .ForMember(x => x.Roles, opt => opt.Ignore());
 
             CreateMap<Employee, EmployeeDTO>()
-                .ForMember(_ => _.Active,
+                  .ForMember(_ => _.Active,
                 opt => opt.MapFrom(o => o.Active == true ? "1" : "0"));
 
+
             CreateMap<EmployeeDTO, Employee>()
-              .ForMember(_ => _.Active,
+                .ForMember(_ => _.Id, o => o.Ignore())
+                  .ForMember(_ => _.Active,
                 opt => opt.MapFrom(o => o.Active == "1" ? true : false));
         }
     }

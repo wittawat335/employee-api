@@ -23,6 +23,9 @@ namespace sample_api_mongodb.Core.Entities
         [BsonElement("Email")]
         public string Email { get; set; } = string.Empty;
 
+        [BsonElement("Gender")]
+        public string Gender { get; set; } = string.Empty;
+
         [BsonElement("DateOfBirth")]
         public DateTime DateOfBirth { get; set; }
 
