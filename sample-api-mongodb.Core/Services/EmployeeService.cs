@@ -31,18 +31,8 @@ namespace sample_api_mongodb.Core.Services
 
         public async Task Insert(EmployeeDTO model)
         {
-            int id = 0; 
-            var query = _repository.AsQueryable();
-            if (query.Count() > 0)
-            {
-                id = query
-               .OrderByDescending(x => x.EmployeeId)
-               .Select(b => b.EmployeeId)
-               .First();
-            }
-            model.EmployeeId = id + 1;
-            var teswt = _mapper.Map<Employee>(model);
-            await _repository.InsertOneAsync(teswt);
+            model.EmployeeId = GenerateId();
+            await _repository.InsertOneAsync(_mapper.Map<Employee>(model));
         }
 
         public async Task Update(EmployeeDTO model)
@@ -55,5 +45,32 @@ namespace sample_api_mongodb.Core.Services
         }
 
         public async Task Delete(string id) => await _repository.DeleteByIdAsync(id);
+        private string GenerateId()
+        {
+            string empId;
+            var query = _repository.AsQueryable();
+            var lastEmp = query.OrderByDescending(_ => _.EmployeeId).FirstOrDefault();
+            if (lastEmp == null)
+            {
+                empId = "EMP001";
+            }
+            else
+            {
+                var result = Int32.Parse(lastEmp.EmployeeId!.Substring(3)) + 1;
+                if (result < 10) {
+                    empId = "EMP00" + result;
+                }
+                else if(result >= 10 && result < 100)
+                {
+                    empId = "EMP0" + result;
+                }
+                else
+                {
+                    empId = "EMP" + result;
+                }
+            }
+
+            return empId;
+        }
     }
 }

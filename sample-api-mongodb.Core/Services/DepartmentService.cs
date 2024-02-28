@@ -1,4 +1,7 @@
-﻿using sample_api_mongodb.Core.DTOs;
+﻿using AutoMapper;
+using sample_api_mongodb.Core.DTOs;
+using sample_api_mongodb.Core.Entities;
+using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
@@ -10,6 +13,15 @@ namespace sample_api_mongodb.Core.Services
 {
     public class DepartmentService : IDepartmentService
     {
+        private readonly IGenericRepository<Department> _repository;
+        private readonly IMapper _mapper;
+
+        public DepartmentService(IGenericRepository<Department> repository, IMapper mapper)
+        {
+            _repository = repository;
+            _mapper = mapper;
+        }
+
         public Task Delete(string id)
         {
             throw new NotImplementedException();
@@ -20,9 +32,10 @@ namespace sample_api_mongodb.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<DepartmentDTO>> GetAll()
+        public async Task<List<DepartmentDTO>> GetAll()
         {
-            throw new NotImplementedException();
+            var query = await _repository.GetAll();
+            return _mapper.Map<List<DepartmentDTO>>(query);
         }
 
         public Task Insert(DepartmentDTO model)

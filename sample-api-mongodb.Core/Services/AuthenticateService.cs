@@ -28,7 +28,6 @@ namespace sample_api_mongodb.Core.Services
             _configuration = configuration;
         }
 
-
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
             var response = new LoginResponse();

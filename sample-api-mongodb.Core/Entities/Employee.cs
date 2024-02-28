@@ -8,7 +8,7 @@ namespace sample_api_mongodb.Core.Entities
     public class Employee : Document
     {
         [BsonElement("EmployeeId")]
-        public int EmployeeId { get; set; }
+        public string? EmployeeId { get; set; }
 
         [BsonElement("FirstName")]
         public string FirstName { get; set; } = string.Empty;
