@@ -25,6 +25,7 @@ namespace sample_api_mongodb.Core
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
         }
         public static void InjectJWTConfig(
             this IServiceCollection services, IConfiguration configuration)
