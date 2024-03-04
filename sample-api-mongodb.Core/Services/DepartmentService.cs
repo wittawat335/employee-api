@@ -3,11 +3,6 @@ using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
 using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sample_api_mongodb.Core.Services
 {
@@ -22,14 +17,12 @@ namespace sample_api_mongodb.Core.Services
             _mapper = mapper;
         }
 
-        public Task Delete(string id)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task Delete(string id) => await _repository.DeleteByIdAsync(id);
 
-        public Task<DepartmentDTO> Get(string id)
+        public async Task<DepartmentDTO> GetById(string id)
         {
-            throw new NotImplementedException();
+            var query = await _repository.FindByIdAsync(id);
+            return _mapper.Map<DepartmentDTO>(query);
         }
 
         public async Task<List<DepartmentDTO>> GetAll()
@@ -38,14 +31,19 @@ namespace sample_api_mongodb.Core.Services
             return _mapper.Map<List<DepartmentDTO>>(query);
         }
 
-        public Task Insert(DepartmentDTO model)
+        public async Task Insert(DepartmentDTO model)
         {
-            throw new NotImplementedException();
+            await _repository.InsertOneAsync(_mapper.Map<Department>(model));
         }
 
-        public Task Update(DepartmentDTO model)
+
+        public async Task Update(DepartmentDTO model)
         {
-            throw new NotImplementedException();
+            var query = await _repository.FindOneAsync(_ => _.DepartmentId == model.DepartmentId);
+            if (query != null)
+            {
+                await _repository.ReplaceOneAsync(_mapper.Map(model, query));
+            }
         }
     }
 }
