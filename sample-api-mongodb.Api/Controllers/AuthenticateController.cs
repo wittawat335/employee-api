@@ -14,7 +14,7 @@ namespace sample_api_mongodb.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var response = await _service.LoginAsync(request);
-            return Ok(response);
+            return response.success ? Ok(response) : BadRequest(response.message);
         }
 
         [HttpPost]
@@ -30,12 +30,7 @@ namespace sample_api_mongodb.Api.Controllers
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenDTO model)
         {
-
-            if (model is null)
-            {
-                return BadRequest("Invalid client request");
-            }
-
+            if (model is null) return BadRequest("Invalid client request");
             var response = await _service.GetRefreshToken(model);
             return response.success ? Ok(response) : BadRequest(response.message);
         }

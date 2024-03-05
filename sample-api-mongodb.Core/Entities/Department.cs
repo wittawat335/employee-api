@@ -12,7 +12,7 @@ namespace sample_api_mongodb.Core.Entities
     [BsonCollection("department")]
     public class Department : Document
     {
-        public int? DepartmentId {  get; set; }
+        public string? DepartmentId {  get; set; }
         public string? DepartmentName { get; set; }
         public bool Active { get; set; } = false;
     }
