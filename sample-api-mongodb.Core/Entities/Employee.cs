@@ -32,8 +32,8 @@ namespace sample_api_mongodb.Core.Entities
         [BsonElement("Address")]
         public string Address { get; set; } = string.Empty;
 
-        [BsonElement("Department")]
-        public string Department { get; set; } = string.Empty;
+        [BsonElement("DepartmentId")]
+        public string DepartmentId { get; set; } = string.Empty;
 
         [BsonElement("Active")]
         public bool Active { get; set; } = false;

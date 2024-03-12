@@ -9,18 +9,41 @@ namespace sample_api_mongodb.Core.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IGenericRepository<Employee> _repository;
+        private readonly IGenericRepository<Department> _dRepository;
         private readonly IMapper _mapper;
 
-        public EmployeeService(IGenericRepository<Employee> repository, IMapper mapper)
+        public EmployeeService(
+            IGenericRepository<Employee> repository, 
+            IGenericRepository<Department> dRepository, IMapper mapper)
         {
             _repository = repository;
+            _dRepository = dRepository;
             _mapper = mapper;
         }
 
         public async Task<List<EmployeeDTO>> GetAll()
         {
-            var query = await _repository.GetAll();
-            return _mapper.Map<List<EmployeeDTO>>(query);
+            IQueryable<Employee> tbEmp = _repository.AsQueryable();
+            IQueryable<Department> tbDepartment = _dRepository.AsQueryable();
+            var query = (from e in tbEmp
+                         join d in tbDepartment on e.DepartmentId equals d.DepartmentId
+                         select new EmployeeDTO
+                         {
+                             Id = e.Id.ToString(),
+                             EmployeeId = e.EmployeeId,
+                             FirstName = e.FirstName,
+                             LastName = e.LastName,
+                             FullName = e.FirstName + " " + e.LastName,
+                             PhoneNumber = e.PhoneNumber,
+                             Email = e.Email,
+                             Gender = e.Gender,
+                             Address = e.Address,
+                             DepartmentId = e.DepartmentId,
+                             DepartmentName = d.DepartmentName,
+                             Active = e.Active ? "1" : "0",
+                         }).AsQueryable();
+
+            return query.ToList();
         }
 
         public async Task<EmployeeDTO> GetById(string id)

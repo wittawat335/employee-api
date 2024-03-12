@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using sample_api_mongodb.Core.DTOs;
 using sample_api_mongodb.Core.Entities;
+using sample_api_mongodb.Core.Exceptions;
 using sample_api_mongodb.Core.Interfaces.Repositories;
 using sample_api_mongodb.Core.Interfaces.Services;
 
@@ -33,23 +34,36 @@ namespace sample_api_mongodb.Core.Services
 
         public async Task Insert(DepartmentDTO model)
         {
+            var checkDup = checkDupilcate(model);
+            if (checkDup) 
+                throw new BadRequestException("Dupilcate DepartmentName");
+
             model.DepartmentId = GenerateId();
             model.CreatedOn = DateTime.UtcNow;
+            model.ModifiedOn = DateTime.UtcNow;
             await _repository.InsertOneAsync(_mapper.Map<Department>(model));
         }
 
 
         public async Task Update(DepartmentDTO model)
         {
-            var query = await _repository
-                .FindOneAsync(_ => _.DepartmentId == model.DepartmentId);
+            var query = await 
+                _repository.FindOneAsync(_ => _.DepartmentId == model.DepartmentId);
             if (query != null)
             {
+                model.CreatedOn = query.CreatedOn;
                 model.ModifiedOn = DateTime.UtcNow;
                 await _repository.ReplaceOneAsync(_mapper.Map(model, query));
             }
         }
 
+        private bool checkDupilcate(DepartmentDTO model)
+        {
+            var query = _repository.FindOne(_ => _.DepartmentName == model.DepartmentName);
+            if (query != null) return true;
+
+            return false;
+        }
         private string GenerateId()
         {
             string Id;
