@@ -29,6 +29,7 @@ namespace sample_api_mongodb.Core.Services
                 {
                     var user = new Users();
                     _mapper.Map(item, user);
+                    user.Password = item.PasswordHash;
                     user.Roles = await _userManager.GetRolesAsync(item);
                     listUser.Add(user);
                 }
@@ -48,7 +49,7 @@ namespace sample_api_mongodb.Core.Services
             {
                 user = new ApplicationUser
                 {
-                    FullName = model.Fullname,
+                    //FullName = model.Fullname,
                     Email = model.Email,
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
                     UserName = model.Username,

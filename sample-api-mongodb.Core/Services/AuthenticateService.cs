@@ -79,7 +79,7 @@ namespace sample_api_mongodb.Core.Services
             {
                 user = new ApplicationUser
                 {
-                    FullName = request.Fullname,
+                    //FullName = request.Fullname,
                     Email = request.Email,
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
                     UserName = request.Username,
