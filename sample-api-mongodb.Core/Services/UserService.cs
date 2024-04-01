@@ -42,25 +42,25 @@ namespace sample_api_mongodb.Core.Services
             return result;
         }
 
-        public async Task Insert(RegisterRequest model)
+        public async Task Insert(UserDTO model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.email);
             if (user == null)
             {
                 user = new ApplicationUser
                 {
-                    //FullName = model.Fullname,
-                    Email = model.Email,
+                    FullName = model.fullname,
+                    Email = model.email,
                     ConcurrencyStamp = Guid.NewGuid().ToString(),
-                    UserName = model.Username,
+                    UserName = model.username,
                     EmailConfirmed = true,
-                    Active = model.Active == "1" ? true : false
+                    Active = model.active == "1" ? true : false
                 };
                 var created =
-                    await _userManager.CreateAsync(user, model.Password);
+                    await _userManager.CreateAsync(user, model.password);
                 if (created.Succeeded)
                 {
-                    await _userManager.AddToRolesAsync(user, model.Roles!);
+                    await _userManager.AddToRolesAsync(user, model.roles!);
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace sample_api_mongodb.Core.Services
             }
             else
             {
-                throw new BadRequestException($"Email : {model.Email}is Duplicate ");
+                throw new BadRequestException($"Email : {model.email}is Duplicate ");
             }
         }
 
@@ -80,7 +80,7 @@ namespace sample_api_mongodb.Core.Services
             if (user != null)
             {
                 user.UserName = model.username; user.Email = model.email;
-                //user.FullName = model.fullname; user.PhoneNumber = model.phonenumber;
+                user.FullName = model.fullname; user.PhoneNumber = model.phonenumber;
                 user.Active = model.active == "1" ? true : false;
 
                 var updated = await _userManager.UpdateAsync(user!);

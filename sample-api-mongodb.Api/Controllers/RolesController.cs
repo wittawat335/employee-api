@@ -10,6 +10,7 @@ namespace sample_api_mongodb.Api.Controllers
     [ApiController]
     public class RolesController(IRoleService _service) : ControllerBase
     {
+        [Authorize(Roles = "Developer, Administrator")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -17,7 +18,7 @@ namespace sample_api_mongodb.Api.Controllers
             return response.Count() > 0 ? Ok(response) : NotFound();
         }
 
-
+        [Authorize(Roles = "Developer, Administrator")]
         [HttpPost]
         public async Task<IActionResult> NewRole([FromBody] CreateRoleRequest request)
         {

@@ -10,6 +10,7 @@ namespace sample_api_mongodb.Api.Controllers
     [ApiController]
     public class DepartmentController(IDepartmentService _service) : ControllerBase
     {
+        //[Authorize(Roles = "Developer")]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -36,7 +37,7 @@ namespace sample_api_mongodb.Api.Controllers
             await _service.Update(model); return Ok();
         }
 
-        [Authorize(Roles = "Developer")]
+        [Authorize(Roles = "Developer, Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {

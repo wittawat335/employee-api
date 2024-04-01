@@ -40,6 +40,10 @@ namespace sample_api_mongodb.Core.Services
                              Address = e.Address,
                              DepartmentId = e.DepartmentId,
                              DepartmentName = d.DepartmentName,
+                             CreatedBy = e.CreatedBy,
+                             CreatedOn = e.CreatedOn,
+                             ModifiedBy = e.ModifiedBy,
+                             ModifiedOn = e.ModifiedOn,
                              Active = e.Active ? "1" : "0",
                          }).AsQueryable();
 

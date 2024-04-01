@@ -5,7 +5,7 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Developer, Administrator")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController(IUserService _service) : ControllerBase
@@ -25,7 +25,7 @@ namespace sample_api_mongodb.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(RegisterRequest model)
+        public async Task<IActionResult> Add(UserDTO model)
         {
             await _service.Insert(model); return Ok();
         }
@@ -36,7 +36,6 @@ namespace sample_api_mongodb.Api.Controllers
             await _service.Update(model); return Ok();
         }
 
-        [Authorize(Roles = "Developer, Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {

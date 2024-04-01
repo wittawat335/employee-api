@@ -7,7 +7,7 @@ namespace sample_api_mongodb.Core.Interfaces.Services
     {
         Task<List<UserDTO>> GetAll();
         Task<UserDTO> Get(string id);
-        Task Insert(RegisterRequest model);
+        Task Insert(UserDTO model);
         Task Update(UserDTO model);
         Task Delete(string id);
     }

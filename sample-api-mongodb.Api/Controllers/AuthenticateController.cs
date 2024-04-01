@@ -18,15 +18,6 @@ namespace sample_api_mongodb.Api.Controllers
         }
 
         [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-        {
-
-            var response = await _service.RegisterAsync(request);
-            return response.Success ? Ok(response) : BadRequest(response.Message);
-        }
-
-        [HttpPost]
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenDTO model)
         {
