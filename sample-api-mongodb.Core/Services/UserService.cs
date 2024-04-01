@@ -80,7 +80,7 @@ namespace sample_api_mongodb.Core.Services
             if (user != null)
             {
                 user.UserName = model.username; user.Email = model.email;
-                user.FullName = model.fullname; user.PhoneNumber = model.phonenumber;
+                //user.FullName = model.fullname; user.PhoneNumber = model.phonenumber;
                 user.Active = model.active == "1" ? true : false;
 
                 var updated = await _userManager.UpdateAsync(user!);

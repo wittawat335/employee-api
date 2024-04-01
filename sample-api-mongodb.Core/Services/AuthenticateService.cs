@@ -20,8 +20,7 @@ namespace sample_api_mongodb.Core.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticateService(
-            UserManager<ApplicationUser> userManager,
+        public AuthenticateService(UserManager<ApplicationUser> userManager,
             IConfiguration configuration)
         {
             _userManager = userManager;
@@ -53,16 +52,16 @@ namespace sample_api_mongodb.Core.Services
                     response.message = Constants.StatusMessage.LoginSuccess;
                     response.success = true;
 
-                    var RefreshTokenValidityInDays
-                        = Convert.ToInt64(_configuration[Constants.JWT.RefreshTokenValidityInDays]);
                     user.RefreshToken = response.refreshToken;
-                    user.RefreshTokenExpiryTime = DateTime.Now.AddDays(RefreshTokenValidityInDays);
+                    var RefreshTokenValidityInDays
+                       = Convert.ToInt64(_configuration[Constants.JWT.RefreshTokenValidityInDays]);
+                    user.RefreshTokenExpiryTime 
+                        = DateTime.Now.AddDays(RefreshTokenValidityInDays);
 
                     await _userManager.UpdateAsync(user);
                 }
             }
-            else
-                response.message = "Email / Password not valid";
+            else response.message = "Email / Password not valid";
 
             return response;
         }
@@ -89,15 +88,17 @@ namespace sample_api_mongodb.Core.Services
                     await _userManager.CreateAsync(user, request.Password);
                 if (!createUserResult.Succeeded)
                 {
-                    response.Message = $"Create user failed {createUserResult?.Errors?.First()?.Description}";
+                    response.Message = 
+                        $"Create user failed {createUserResult?.Errors?.First()?.Description}";
                 }
                 else
                 {
-                    var addUserToRoleResult =
-                        await _userManager.AddToRoleAsync(user, "User");
+                    var addUserToRoleResult = await _userManager.AddToRoleAsync(user, "User");
                     if (!addUserToRoleResult.Succeeded)
                     {
-                        response.Message = $"Create user succeeded but could not add user to role {addUserToRoleResult?.Errors?.First()?.Description}";
+                        response.Message = 
+                            $"Create user succeeded but could not add user to role " +
+                            $"{addUserToRoleResult?.Errors?.First()?.Description}";
                     }
                     else
                     {
