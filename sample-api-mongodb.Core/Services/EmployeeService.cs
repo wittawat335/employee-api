@@ -59,6 +59,8 @@ namespace sample_api_mongodb.Core.Services
         public async Task Insert(EmployeeDTO model)
         {
             model.EmployeeId = GenerateId();
+            model.CreatedOn = DateTime.UtcNow;
+            model.ModifiedOn = DateTime.UtcNow;
             await _repository.InsertOneAsync(_mapper.Map<Employee>(model));
         }
 
@@ -67,6 +69,8 @@ namespace sample_api_mongodb.Core.Services
             var query = await _repository.FindOneAsync(_ => _.EmployeeId == model.EmployeeId);
             if (query != null) 
             {
+                model.CreatedOn = query.CreatedOn;
+                model.ModifiedOn = DateTime.UtcNow;
                 await _repository.ReplaceOneAsync(_mapper.Map(model, query));
             }
         }
