@@ -1,21 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestsController : ControllerBase
+    public class TestsController(ITestService _service) : ControllerBase
     {
-        public string GenerateGreetText()
+        [HttpGet]
+        public IActionResult GetGenerateGreetText()
         {
-            var dateTimeNow= DateTime.Now;
-            return dateTimeNow.Hour switch
-            { 
-                >= 5 and < 12 => "Morning",
-                >= 12 and < 18 => "Afternoon",
-                _ => "Evering"
-            };
+            return Ok(_service.GenereateGreetText());
         }
     }
 }
