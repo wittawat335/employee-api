@@ -9,5 +9,6 @@ namespace sample_api_mongodb.Core.Interfaces.Services
     public interface ITestService
     {
         string GenereateGreetText();
+        List<string> GetCities();
     }
 }

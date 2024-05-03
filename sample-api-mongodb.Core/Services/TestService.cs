@@ -1,23 +1,40 @@
 ﻿using sample_api_mongodb.Core.Interfaces.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sample_api_mongodb.Core.Services
 {
     public class TestService : ITestService
     {
+        private readonly TimeProvider _timeProvider;
+
+        public TestService(TimeProvider timeProvider)
+        {
+            _timeProvider = timeProvider;
+        }
+
         public string GenereateGreetText()
         {
-            var dateTimeNow = DateTime.Now;
+            var start = _timeProvider.GetTimestamp();
+            var end = _timeProvider.GetTimestamp();
+            var dateTimeNow = _timeProvider.GetLocalNow();
+            var diff = _timeProvider.GetElapsedTime(start, end);
             return dateTimeNow.Hour switch
             {
                 >= 5 and < 12 => "Morning",
                 >= 12 and < 18 => "Afternoon",
                 _ => "Evering"
             };
+        }
+
+        public List<string> GetCities()
+        {
+            var cities = new List<string>
+            {
+                "Bangkok",
+                "London",
+                "New York"
+            };
+
+            return cities;
         }
     }
 }
