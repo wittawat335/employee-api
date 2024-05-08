@@ -19,10 +19,12 @@ namespace sample_api_mongodb.Api.Controllers
         public IActionResult FrozenSet()
         {
             var list = _service.GetCities();
+            var test = list.FirstOrDefault();
             var frozenSet = list.ToFrozenSet();
-            var city = frozenSet.Where(_ => _ == "London" || _ == "Bangkok");
+            var city = frozenSet.FirstOrDefault();
+            //var city = frozenSet.Where(_ => _ == "London" || _ == "Bangkok");
 
-            return Ok(city);
+            return Ok(test);
         }
     } 
 }
