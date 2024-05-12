@@ -11,7 +11,8 @@ namespace sample_api_mongodb.Infrastructure
 {
     public static class InfraConfiguration
     {
-        public static void InjectInfraConfig(this IServiceCollection services, IConfiguration configuration)
+        public static void InjectInfraConfig(this IServiceCollection services, 
+            IConfiguration configuration)
         {
             services.Configure<DbSettings>(configuration.GetSection(nameof(MongoDbSettings)));
             services.AddSingleton<IDbSettings>(serviceProvider =>

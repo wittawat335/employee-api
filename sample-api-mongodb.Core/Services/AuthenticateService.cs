@@ -16,18 +16,9 @@ using System.Text;
 
 namespace sample_api_mongodb.Core.Services
 {
-    public class AuthenticateService : IAuthenticateService
+    public class AuthenticateService(
+        UserManager<ApplicationUser> _userManager, IConfiguration _configuration) : IAuthenticateService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IConfiguration _configuration;
-
-        public AuthenticateService(UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
-        {
-            _userManager = userManager;
-            _configuration = configuration;
-        }
-
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
             var response = new LoginResponse();

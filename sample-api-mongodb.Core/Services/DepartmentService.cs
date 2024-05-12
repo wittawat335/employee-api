@@ -7,17 +7,8 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Core.Services
 {
-    public class DepartmentService : IDepartmentService
+    public class DepartmentService(IGenericRepository<Department> _repository, IMapper _mapper) : IDepartmentService
     {
-        private readonly IGenericRepository<Department> _repository;
-        private readonly IMapper _mapper;
-
-        public DepartmentService(IGenericRepository<Department> repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
-
         public async Task Delete(string id) => await _repository.DeleteByIdAsync(id);
 
         public async Task<DepartmentDTO> GetById(string id)
