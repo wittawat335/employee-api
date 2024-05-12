@@ -6,19 +6,8 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Core.Services
 {
-    public class RoleService : IRoleService
+    public class RoleService(IRoleRepository _repository, RoleManager<ApplicationRole> _roleManager) : IRoleService
     {
-        private readonly IRoleRepository _repository;
-        private readonly RoleManager<ApplicationRole> _roleManager;
-
-        public RoleService(
-            IRoleRepository repository, 
-            RoleManager<ApplicationRole> roleManager)
-        {
-            _repository = repository;
-            _roleManager = roleManager;
-        }
-
         public async Task<List<Roles>> GetAll()
         {
             var query = await _repository.GetAll();

@@ -7,7 +7,8 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Core.Services
 {
-    public class DepartmentService(IGenericRepository<Department> _repository, IMapper _mapper) : IDepartmentService
+    public class DepartmentService(
+        IGenericRepository<Department> _repository, IMapper _mapper) : IDepartmentService
     {
         public async Task Delete(string id) => await _repository.DeleteByIdAsync(id);
 
@@ -35,7 +36,6 @@ namespace sample_api_mongodb.Core.Services
             await _repository.InsertOneAsync(_mapper.Map<Department>(model));
         }
 
-
         public async Task Update(DepartmentDTO model)
         {
             var query = await 
@@ -55,6 +55,7 @@ namespace sample_api_mongodb.Core.Services
 
             return false;
         }
+
         private string GenerateId()
         {
             string Id;

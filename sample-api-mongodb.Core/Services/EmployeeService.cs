@@ -6,21 +6,10 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Core.Services
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeService(
+        IGenericRepository<Employee> _repository, IGenericRepository<Department> _dRepository, 
+        IMapper _mapper) : IEmployeeService
     {
-        private readonly IGenericRepository<Employee> _repository;
-        private readonly IGenericRepository<Department> _dRepository;
-        private readonly IMapper _mapper;
-
-        public EmployeeService(
-            IGenericRepository<Employee> repository, 
-            IGenericRepository<Department> dRepository, IMapper mapper)
-        {
-            _repository = repository;
-            _dRepository = dRepository;
-            _mapper = mapper;
-        }
-
         public async Task<List<EmployeeDTO>> GetAll()
         {
             IQueryable<Employee> tbEmp = _repository.AsQueryable();
@@ -76,6 +65,7 @@ namespace sample_api_mongodb.Core.Services
         }
 
         public async Task Delete(string id) => await _repository.DeleteByIdAsync(id);
+
         private string GenerateId()
         {
             string empId;

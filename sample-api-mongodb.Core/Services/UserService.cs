@@ -7,17 +7,8 @@ using sample_api_mongodb.Core.Interfaces.Services;
 
 namespace sample_api_mongodb.Core.Services
 {
-    public class UserService : IUserService
+    public class UserService(UserManager<ApplicationUser> _userManager, IMapper _mapper) : IUserService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMapper _mapper;
-
-        public UserService(UserManager<ApplicationUser> userManager, IMapper mapper)
-        {
-            _userManager = userManager;
-            _mapper = mapper;
-        }
-
         public async Task<List<UserDTO>> GetAll()
         {
             List<UserDTO> result = new();
